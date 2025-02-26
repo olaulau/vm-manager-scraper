@@ -1,6 +1,8 @@
 <?php
+require_once __DIR__ . "/functions.inc.php";
 
-// load content from file
+
+// load JSON content from a file
 $test_json_file_name = "data/html_table.json";
 $content = file_get_contents($test_json_file_name);
 
@@ -29,13 +31,15 @@ $html = $decoded ["body"];
 // echo $html; die;
 
 
-///////////////////////
-// $test_html_file_name = "data/html_table.html";
-// $html = file_get_contents($test_html_file_name);
-///////////////////////
+// load html directly from a file
+/*
+$test_html_file_name = "data/html_table.html";
+$html = file_get_contents($test_html_file_name);
+*/
 
 
 // browse HTML v4
+/*
 $doc = new DOMDocument();
 // var_dump($doc);
 $res = $doc->loadHTML($html, LIBXML_NOERROR);
@@ -43,9 +47,9 @@ if($res === false) {
 	throw new ErrorException("html load error");
 }
 // echo $doc->saveHTML();
-
 $children = $doc->childNodes;
 // var_dump($children);
+*/
 
 
 // browse HTML v5
@@ -68,29 +72,29 @@ foreach ($rows as $row) {
 /*
 display_html_tree($dom);
 die;
-function display_html_tree(Dom\Node $node, int $depth = 0)
-{
-	echo str_pad("", $depth, "\t") . $node->nodeName . PHP_EOL;
-	foreach($node->childNodes as $child) {
-		display_html_tree($child, $depth + 1);
-	}
-}
 */
 
+
 // browse XML
-// $xml = new SimpleXMLElement($html, LIBXML_NOERROR);
-// var_dump($xml); die;
+/*
+$xml = new SimpleXMLElement($html, LIBXML_NOERROR);
+var_dump($xml); die;
+*/
 
 
 // output data into proper JSON
+/*
 header('Content-Disposition: attachment; filename="test.csv";');
 header('Content-Type: application/csv; charset=UTF-8');
 output_csv_table ($data);
-function output_csv_table (array $data)
-{
-	$out = fopen('php://output', 'w');
-	foreach ($data as $fields) {
-		fputcsv($out, $fields, ',', '"', '');
-	}
-	fclose($out);
-}
+*/
+
+// output data into proper JSON
+output_html_table ($data);
+?>
+<style>
+	table,tr,td {
+		border: 1px black solid;
+	}	
+</style>
+<?php
