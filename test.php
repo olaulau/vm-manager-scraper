@@ -6,19 +6,11 @@ require_once __DIR__ . "/functions.inc.php";
 $test_json_file_name = "data/html_table.json";
 $content = file_get_contents($test_json_file_name);
 
-
 // adjust JSON format
-$content = str_replace("{body: '", '{"body": "', $content);
-$content = str_replace("\\'", "'", $content);
-// $content = str_replace('\\"', '"', $content);
-$content = str_replace("\t", " ", $content);
-$content = str_replace("'}", '"}', $content);
-// echo $content; die;
-
+$content = clean_dirty_json($content);
 
 // validate JSON
 $valid = json_validate($content);
-// var_dump($valid);
 if($valid === false) {
 	throw new ErrorException(json_last_error() . " : " . json_last_error_msg());
 }
@@ -26,31 +18,7 @@ if($valid === false) {
 
 // decode JSON
 $decoded = json_decode($content, true);
-// var_dump($decoded);
 $html = $decoded ["body"];
-// echo $html; die;
-
-
-// load html directly from a file
-/*
-$test_html_file_name = "data/html_table.html";
-$html = file_get_contents($test_html_file_name);
-*/
-
-
-// browse HTML v4
-/*
-$doc = new DOMDocument();
-// var_dump($doc);
-$res = $doc->loadHTML($html, LIBXML_NOERROR);
-if($res === false) {
-	throw new ErrorException("html load error");
-}
-// echo $doc->saveHTML();
-$children = $doc->childNodes;
-// var_dump($children);
-*/
-
 
 // browse HTML v5
 $dom = Dom\HTMLDocument::createFromString($html, LIBXML_NOERROR);
@@ -66,19 +34,9 @@ foreach ($rows as $row) {
 	}
 	$data [] = $row_data;
 }
-// var_dump($data);
-// die;
-
 /*
 display_html_tree($dom);
 die;
-*/
-
-
-// browse XML
-/*
-$xml = new SimpleXMLElement($html, LIBXML_NOERROR);
-var_dump($xml); die;
 */
 
 
