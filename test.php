@@ -59,7 +59,7 @@ $data = [];
 $rows = $dom->querySelectorAll('body > table:nth-child(2) > tbody > tr > td > table > tbody > tr:nth-child(2)');
 foreach ($rows as $row) {
 	$row_data = [];
-	$cells = $row->querySelectorAll('td'); // .fourth, .second
+	$cells = $row->querySelectorAll('td.second');
 	foreach ($cells as $cell) {
 		$val = $cell->textContent;
 		$row_data [] = $val;
@@ -90,11 +90,12 @@ output_csv_table ($data);
 */
 
 // output data into proper JSON
-output_html_table ($data);
+$data = array_remove_empty_columns($data);
+output_html_table (array_remove_empty_columns($data));
 ?>
 <style>
 	table,tr,td {
-		border: 1px black solid;
-	}	
+		border: 1px grey solid;
+	}
 </style>
 <?php
