@@ -1,4 +1,7 @@
 <?php
+
+use Lib\Matrix;
+require_once __DIR__ . "/vendor/autoload.php";
 require_once __DIR__ . "/functions.inc.php";
 require_once __DIR__ . "/config.inc.php";
 
@@ -88,6 +91,11 @@ $html = $decoded ["body"];
 
 // browse HTML v5
 $dom = Dom\HTMLDocument::createFromString($html, LIBXML_NOERROR);
+// display dom as HTML tree
+/*
+display_html_tree($dom);
+die;
+*/
 
 $data_headers = [];
 $rows = $dom->querySelectorAll('body > table:nth-child(2) > tbody > tr > td > table:first-child > tbody > tr:nth-child(2)');
@@ -115,22 +123,14 @@ foreach ($rows as $row) {
 }
 
 // clean data & merge headers
-$data_headers = array_remove_empty_columns($data_headers);
-$data = array_remove_empty_columns($data);
+$data_headers = Matrix::array_remove_empty_columns($data_headers);
+array_unshift($data_headers[0], "Poste");
+$data = Matrix::array_remove_empty_columns($data);
 $data = $data_headers + $data;
 
-// display data as HTML tree
-/*
-display_html_tree($dom);
-die;
-*/
 
+// download data as CSV
+// Matrix::download_csv_table($data);
 
-// output data into proper JSON
-/*
-output_json_table($data);
-die;
-*/
-
-// output data into proper JSON
-output_html_table (array_remove_empty_columns($data));
+// output data in HTML table
+Matrix::display_html_table ($data);
