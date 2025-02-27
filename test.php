@@ -119,6 +119,7 @@ $data_headers = array_remove_empty_columns($data_headers);
 $data = array_remove_empty_columns($data);
 $data = $data_headers + $data;
 
+// display data as HTML tree
 /*
 display_html_tree($dom);
 die;
@@ -127,9 +128,8 @@ die;
 
 // output data into proper JSON
 /*
-header('Content-Disposition: attachment; filename="test.csv";');
-header('Content-Type: application/csv; charset=UTF-8');
-output_csv_table ($data);
+output_json_table($data);
+die;
 */
 
 // output data into proper JSON

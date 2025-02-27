@@ -57,7 +57,14 @@ function output_html_table (array $data) : void
 		}
 	</style>
 	<?php
-	
+}
+
+
+function output_json_table (array $data) : void
+{
+	header('Content-Disposition: attachment; filename="data.csv";');
+	header('Content-Type: application/csv; charset=UTF-8');
+	output_csv_table ($data);
 }
 
 
