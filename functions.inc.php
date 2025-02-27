@@ -51,7 +51,13 @@ function output_html_table (array $data) : void
 			?>
 		</tbody>
 	</table>
+	<style>
+		table,tr,td {
+			border: 1px grey solid;
+		}
+	</style>
 	<?php
+	
 }
 
 
