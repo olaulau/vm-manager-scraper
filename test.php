@@ -6,7 +6,6 @@ require_once __DIR__ . "/config.inc.php";
 // auth
 $url = "http://www.vm-manager.org/index.php?view=Login";
 $ch = curl_init();
-$headers = [];
 unset($res);
 curl_setopt($ch, CURLOPT_HEADERFUNCTION,
 	function($curl, $header) use (&$headers)
@@ -21,7 +20,9 @@ curl_setopt($ch, CURLOPT_HEADERFUNCTION,
 );
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($ch, CURLOPT_URL, $url);
+curl_setopt($ch, CURLOPT_HTTPHEADER, ["Accept-Language: fr"]);
 curl_setopt($ch, CURLOPT_POSTFIELDS, $conf ["auth"]);
+$headers = [];
 $res = curl_exec($ch);
 if (curl_errno($ch)) {
 	throw new ErrorException(curl_errno($ch) . " : " . curl_error($ch));
@@ -43,7 +44,6 @@ $cookies_str = implode("; ", $cookies);
 // get players data
 $url = "http://www.vm-manager.org/Ajax_handler.php?phpsite=view_body.php&action=Squad";
 $ch = curl_init();
-$headers = [];
 unset($res);
 curl_setopt($ch, CURLOPT_HEADERFUNCTION,
 	function($curl, $header) use (&$headers)
@@ -59,6 +59,7 @@ curl_setopt($ch, CURLOPT_HEADERFUNCTION,
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($ch, CURLOPT_URL, $url);
 curl_setopt($ch, CURLOPT_COOKIE, $cookies_str);
+$headers = [];
 $res = curl_exec($ch);
 if (curl_errno($ch)) {
 	throw new ErrorException(curl_errno($ch) . " : " . curl_error($ch));
@@ -88,17 +89,36 @@ $html = $decoded ["body"];
 // browse HTML v5
 $dom = Dom\HTMLDocument::createFromString($html, LIBXML_NOERROR);
 
+$data_headers = [];
+$rows = $dom->querySelectorAll('body > table:nth-child(2) > tbody > tr > td > table:first-child > tbody > tr:nth-child(2)');
+foreach ($rows as $row) {
+	$row_data = [];
+	$cells = $row->querySelectorAll('td.fourth');
+	foreach ($cells as $cell) {
+		$val = trim($cell->textContent);
+		$row_data [] = $val;
+	}
+	$data_headers [] = $row_data;
+}
+
+
 $data = [];
 $rows = $dom->querySelectorAll('body > table:nth-child(2) > tbody > tr > td > table > tbody > tr:nth-child(2)');
 foreach ($rows as $row) {
 	$row_data = [];
 	$cells = $row->querySelectorAll('td.second');
 	foreach ($cells as $cell) {
-		$val = $cell->textContent;
+		$val = trim($cell->textContent);
 		$row_data [] = $val;
 	}
 	$data [] = $row_data;
 }
+
+// clean data & merge headers
+$data_headers = array_remove_empty_columns($data_headers);
+$data = array_remove_empty_columns($data);
+$data = $data_headers + $data;
+
 /*
 display_html_tree($dom);
 die;
@@ -113,5 +133,4 @@ output_csv_table ($data);
 */
 
 // output data into proper JSON
-$data = array_remove_empty_columns($data);
 output_html_table (array_remove_empty_columns($data));
