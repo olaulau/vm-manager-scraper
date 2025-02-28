@@ -1,47 +1,16 @@
 <?php
-
-use Lib\Matrix;
 require_once __DIR__ . "/vendor/autoload.php";
 require_once __DIR__ . "/functions.inc.php";
 require_once __DIR__ . "/config.inc.php";
 
+use Lib\Matrix;
+use Lib\WebScrapper;
+
 
 // auth
 $url = "http://www.vm-manager.org/index.php?view=Login";
-$ch = curl_init();
-unset($res);
-curl_setopt($ch, CURLOPT_HEADERFUNCTION,
-	function($curl, $header) use (&$headers)
-	{
-		$len = strlen($header);
-		$header = explode(':', $header, 2);
-		if (count($header) < 2) // ignore invalid headers
-			return $len;
-		$headers[strtolower(trim($header[0]))][] = trim($header[1]);
-		return $len;
-	}
-);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-curl_setopt($ch, CURLOPT_URL, $url);
-curl_setopt($ch, CURLOPT_HTTPHEADER, ["Accept-Language: fr"]);
-curl_setopt($ch, CURLOPT_POSTFIELDS, $conf ["auth"]);
-$headers = [];
-$res = curl_exec($ch);
-if (curl_errno($ch)) {
-	throw new ErrorException(curl_errno($ch) . " : " . curl_error($ch));
-}
-// $info = curl_getinfo($ch);
-// echo 'Took ', $info['total_time'], ' seconds to send a request to ', $info['url'], "\n";
-// var_dump($info);
-// echo $res;
-// die;
-
-$cookies_headers = $headers ["set-cookie"];
-$cookies = [];
-foreach ($cookies_headers as $cookie_header) {
-	$cookies [] = substr($cookie_header, 0, strpos($cookie_header, "; "));
-}
-$cookies_str = implode("; ", $cookies);
+$res = WebScrapper::query_with_curl($url, $conf ["auth"]);
+$cookies_str = WebScrapper::get_cookies_str();
 
 
 // get players data
