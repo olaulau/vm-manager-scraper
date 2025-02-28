@@ -1,10 +1,13 @@
 <?php
 namespace Lib;
 
+use ErrorException;
+
+
 class WebScrapper
 {
 
-	public static array $cookies_headers;
+	public static array $cookies_headers = [];
 
 
 	public function construct__ () : void
@@ -34,6 +37,7 @@ class WebScrapper
 		// set curl options
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_COOKIE, self::get_cookies_str());
 		curl_setopt($ch, CURLOPT_HTTPHEADER, ["Accept-Language: fr"]);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $post_fields);
 		
@@ -53,7 +57,7 @@ class WebScrapper
 		*/
 
 		// extract cookies from header
-		self::$cookies_headers = $headers ["set-cookie"];
+		self::$cookies_headers = $headers ["set-cookie"] ?? [];
 
 		return $res;
 	}

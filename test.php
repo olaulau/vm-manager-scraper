@@ -10,38 +10,11 @@ use Lib\WebScrapper;
 // auth
 $url = "http://www.vm-manager.org/index.php?view=Login";
 $res = WebScrapper::query_with_curl($url, $conf ["auth"]);
-$cookies_str = WebScrapper::get_cookies_str();
 
 
 // get players data
 $url = "http://www.vm-manager.org/Ajax_handler.php?phpsite=view_body.php&action=Squad";
-$ch = curl_init();
-unset($res);
-curl_setopt($ch, CURLOPT_HEADERFUNCTION,
-	function($curl, $header) use (&$headers)
-	{
-		$len = strlen($header);
-		$header = explode(':', $header, 2);
-		if (count($header) < 2) // ignore invalid headers
-			return $len;
-		$headers[strtolower(trim($header[0]))][] = trim($header[1]);
-		return $len;
-	}
-);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-curl_setopt($ch, CURLOPT_URL, $url);
-curl_setopt($ch, CURLOPT_COOKIE, $cookies_str);
-$headers = [];
-$res = curl_exec($ch);
-if (curl_errno($ch)) {
-	throw new ErrorException(curl_errno($ch) . " : " . curl_error($ch));
-}
-// $info = curl_getinfo($ch);
-// echo 'Took ', $info['total_time'], ' seconds to send a request to ', $info['url'], "\n";
-// var_dump($info);
-// echo $res;
-
-$players_raw_content = $res;
+$players_raw_content = WebScrapper::query_with_curl($url, []);
 
 
 // adjust JSON format
