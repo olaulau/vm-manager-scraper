@@ -14,8 +14,8 @@ VM::authenticate($conf ["auth"] ["login"], $conf ["auth"] ["pass"]);
 $data = VM::get_players_data();
 
 
-// download data as CSV
-// Matrix::download_csv_table($data);
+// send data as CSV
+// Matrix::send_csv_table($data);
 
 // output data in HTML table
 Matrix::display_html_table ($data);

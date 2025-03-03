@@ -1,6 +1,7 @@
 <?php
 namespace Lib;
 
+use Dom\HTMLDocument;
 use ErrorException;
 
 
@@ -22,11 +23,27 @@ class VM
 	}
 	
 	
+	public static function extract_data_from_dom (HTMLDocument $dom, string $row_selector, string $cell_selector) : array
+	{
+		$res = [];
+		$rows = $dom->querySelectorAll($row_selector);
+		foreach ($rows as $row) {
+			$row_data = [];
+			$cells = $row->querySelectorAll($cell_selector);
+			foreach ($cells as $cell) {
+				$val = trim($cell->textContent);
+				$row_data [] = $val;
+			}
+			$res [] = $row_data;
+		}
+		return $res;
+	}
+	
+	
 	public static function get_players_data () : array
 	{
 		$url = "http://www.vm-manager.org/Ajax_handler.php?phpsite=view_body.php&action=Squad";
 		$players_raw_content = WebScrapper::query_with_curl($url, []);
-
 
 		// adjust JSON format
 		$players_raw_content = WebScrapper::clean_dirty_json($players_raw_content);
@@ -36,7 +53,6 @@ class VM
 		if($valid === false) {
 			throw new ErrorException(json_last_error() . " : " . json_last_error_msg());
 		}
-
 
 		// decode JSON
 		$decoded = json_decode($players_raw_content, true);
@@ -51,38 +67,15 @@ class VM
 		*/
 
 		// headers
-		$data_headers = [];
-		$rows = $dom->querySelectorAll('body > table:nth-child(2) > tbody > tr > td > table:first-child > tbody > tr:nth-child(2)');
-		foreach ($rows as $row) {
-			$row_data = [];
-			$cells = $row->querySelectorAll('td.fourth');
-			foreach ($cells as $cell) {
-				$val = trim($cell->textContent);
-				$row_data [] = $val;
-			}
-			$data_headers [] = $row_data;
-		}
+		$data_headers = self::extract_data_from_dom($dom, 'body > table:nth-child(2) > tbody > tr > td > table:first-child > tbody > tr:nth-child(2)', 'td.fourth');
 		$data_headers = Matrix::array_remove_empty_columns($data_headers);
-		array_unshift($data_headers[0], "Poste");
-
+		array_unshift($data_headers[0], "Poste"); // add missing header for first column
 
 		// rows
-		$data = [];
-		$rows = $dom->querySelectorAll('body > table:nth-child(2) > tbody > tr > td > table > tbody > tr:nth-child(2)');
-		foreach ($rows as $row) {
-			$row_data = [];
-			$cells = $row->querySelectorAll('td.second');
-			foreach ($cells as $cell) {
-				$val = trim($cell->textContent);
-				$row_data [] = $val;
-			}
-			$data [] = $row_data;
-		}
+		$data = self::extract_data_from_dom($dom, 'body > table:nth-child(2) > tbody > tr > td > table > tbody > tr:nth-child(2)', 'td.second');
 		$data = Matrix::array_remove_empty_columns($data);
 
-		// merge
-		$data = $data_headers + $data;
-		return $data;
+		return $data_headers + $data;
 	}
 	
 }

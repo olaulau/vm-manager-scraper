@@ -44,7 +44,7 @@ class Matrix
 		fclose($out);
 	}
 
-	public static function download_csv_table(array $data): void
+	public static function send_csv_table(array $data): void
 	{
 		header('Content-Disposition: attachment; filename="data.csv";');
 		header('Content-Type: application/csv; charset=UTF-8');
