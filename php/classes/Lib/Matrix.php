@@ -4,7 +4,7 @@ namespace Lib;
 class Matrix
 {
 
-	public static function display_html_table(array $data): void
+	public static function display_html_table (array $data): void
 	{
 		?>
 		<table>
@@ -35,7 +35,7 @@ class Matrix
 	}
 
 
-	private static function output_csv_table(array $data): void
+	private static function output_csv_table (array $data): void
 	{
 		$out = fopen('php://output', 'w');
 		foreach ($data as $fields) {
@@ -44,7 +44,7 @@ class Matrix
 		fclose($out);
 	}
 
-	public static function send_csv_table(array $data): void
+	public static function send_csv_table (array $data): void
 	{
 		header('Content-Disposition: attachment; filename="data.csv";');
 		header('Content-Type: application/csv; charset=UTF-8');
@@ -53,7 +53,7 @@ class Matrix
 	}
 
 
-	public static function array_transpose(array $data): array
+	public static function array_transpose (array $data): array
 	{
 		$res = [];
 		foreach ($data as $y => $row) {
@@ -65,7 +65,7 @@ class Matrix
 	}
 
 
-	public static function array_remove_empty_columns(array $data): array
+	public static function array_remove_empty_columns (array $data): array
 	{
 		$res = self::array_transpose($data);
 

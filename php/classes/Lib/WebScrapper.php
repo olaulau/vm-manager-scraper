@@ -56,8 +56,10 @@ class WebScrapper
 		die;
 		*/
 
-		// extract cookies from header
-		self::$cookies_headers = $headers ["set-cookie"] ?? [];
+		// store cookies extracted from header (if any)
+		if(!empty($headers ["set-cookie"])) {
+			self::$cookies_headers = $headers ["set-cookie"];
+		}
 
 		return $res;
 	}
