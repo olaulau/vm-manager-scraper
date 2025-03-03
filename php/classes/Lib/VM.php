@@ -45,7 +45,7 @@ class VM
 		$url = "http://vm-manager.org/Ajax_handler.php?phpsite=view_body.php&action=Squad";
 		$raw_content = WebScrapper::query_with_curl($url, []);
 
-		// adjust JSON format
+		// clean JSON
 		$raw_content = WebScrapper::clean_dirty_json($raw_content);
 
 		// validate JSON
@@ -60,11 +60,6 @@ class VM
 
 		// browse HTML v5
 		$dom = \Dom\HTMLDocument::createFromString($html, LIBXML_NOERROR);
-		// display dom as HTML tree
-		/*
-		self::display_html_tree($dom);
-		die;
-		*/
 
 		// headers
 		$data_headers = self::extract_data_from_dom($dom, 'body > table:nth-child(2) > tbody > tr > td > table:first-child > tbody > tr:nth-child(2)', 'td.fourth');
@@ -84,7 +79,40 @@ class VM
 		$url = "https://vm-manager.org/Ajax_handler.php?phpsite=view_body.php&action=League";
 		$raw_content = WebScrapper::query_with_curl($url, []);
 		
-		// adjust JSON format
+		// clean JSON
+		$raw_content = WebScrapper::clean_dirty_json($raw_content);
+		
+		// validate JSON
+		$valid = json_validate($raw_content);
+		if($valid === false) {
+			throw new ErrorException(json_last_error() . " : " . json_last_error_msg());
+		}
+		
+		// decode JSON
+		$decoded = json_decode($raw_content, true);
+		$html = $decoded ["body"];
+
+		// browse HTML v5
+		$dom = \Dom\HTMLDocument::createFromString($html, LIBXML_NOERROR);
+		
+		// headers
+		$data_headers = self::extract_data_from_dom($dom, 'body > form#postform > table > tbody > tr > td > table:first-child > tbody > tr:nth-child(2)', 'td.fourth');
+		$data_headers = Matrix::array_remove_empty_columns($data_headers);
+
+		// rows
+		$data = self::extract_data_from_dom($dom, 'body > form#postform > table > tbody > tr > td > table > tbody > tr:nth-child(2)', 'td.second:not(:nth-child(3)):not(:nth-child(6))');
+		$data = Matrix::array_remove_empty_columns($data);
+
+		return $data_headers + $data;
+	}
+	
+	
+	public static function get_transfert_data () : array
+	{
+		$url = "https://vm-manager.org/Ajax_handler.php?phpsite=view_body.php&action=TransferList";
+		$raw_content = WebScrapper::query_with_curl($url, []);
+		
+		// clean JSON
 		$raw_content = WebScrapper::clean_dirty_json($raw_content);
 		
 		// validate JSON
@@ -107,11 +135,12 @@ class VM
 		*/
 		
 		// headers
-		$data_headers = self::extract_data_from_dom($dom, 'body > form#postform > table > tbody > tr > td > table:first-child > tbody > tr:nth-child(2)', 'td.fourth');
+		$data_headers = self::extract_data_from_dom($dom, 'body > table:nth-child(2) > tbody > tr > td > table > tbody > tr:nth-child(2)', 'td.fourth');
 		$data_headers = Matrix::array_remove_empty_columns($data_headers);
+		array_splice($data_headers[0], 1, 0, ["Poste"]);
 
 		// rows
-		$data = self::extract_data_from_dom($dom, 'body > form#postform > table > tbody > tr > td > table > tbody > tr:nth-child(2)', 'td.second:not(:nth-child(3)):not(:nth-child(6))');
+		$data = self::extract_data_from_dom($dom, 'body > table:nth-child(2) > tbody > tr:not(:nth-last-child(2)) > td > table > tbody > tr:nth-child(2)', 'td.second:not(:nth-child(2)):not(:nth-child(3))');
 		$data = Matrix::array_remove_empty_columns($data);
 
 		return $data_headers + $data;
