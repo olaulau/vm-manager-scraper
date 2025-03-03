@@ -72,5 +72,15 @@ class WebScrapper
 		$cookies_str = implode("; ", $cookies);
 		return $cookies_str;
 	}
+	
+	
+	public static function clean_dirty_json (string $json) : string
+	{
+		$json = str_replace("{body: '", '{"body": "', $json);
+		$json = str_replace("\\'", "'", $json);
+		$json = str_replace("\t", " ", $json);
+		$json = str_replace("'}", '"}', $json);
+		return $json;
+	}
 
 }
