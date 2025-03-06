@@ -9,6 +9,7 @@ use Lib\VM;
 // auth
 VM::authenticate ($conf ["auth"] ["login"], $conf ["auth"] ["pass"]);
 
+
 // get team data
 ?>
 <h2>team</h2>
@@ -30,7 +31,5 @@ Matrix::display_html_table ($league_data);
 ?>
 <h2>transferts</h2>
 <?php
-$transferts_data = VM::get_transfert_data ();
-Matrix::display_html_table ($transferts_data);
-$transferts_data = VM::get_transfert_data (2);
+$transferts_data = VM::get_transfert_data_pages(4);
 Matrix::display_html_table ($transferts_data);

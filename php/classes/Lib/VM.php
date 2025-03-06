@@ -70,7 +70,7 @@ class VM
 		$data = self::extract_data_from_dom($dom, 'body > table:nth-child(2) > tbody > tr > td > table > tbody > tr:nth-child(2)', 'td.second');
 		$data = Matrix::array_remove_empty_columns($data);
 
-		return $data_headers + $data;
+		return array_merge($data_headers, $data);
 	}
 	
 	
@@ -103,11 +103,11 @@ class VM
 		$data = self::extract_data_from_dom($dom, 'body > form#postform > table > tbody > tr > td > table > tbody > tr:nth-child(2)', 'td.second:not(:nth-child(3)):not(:nth-child(6))');
 		$data = Matrix::array_remove_empty_columns($data);
 
-		return $data_headers + $data;
+		return array_merge($data_headers, $data);
 	}
 	
 	
-	public static function get_transfert_data (int $num_page=1) : array
+	public static function get_transfert_data (int $num_page=1, bool $include_headers=true) : array
 	{
 		$url = "https://vm-manager.org/Ajax_handler.php?phpsite=view_body.php&action=TransferList&site=$num_page";
 		$raw_content = WebScrapper::query_with_curl($url, []);
@@ -135,15 +135,39 @@ class VM
 		*/
 		
 		// headers
-		$data_headers = self::extract_data_from_dom($dom, 'body > table:nth-child(2) > tbody > tr > td > table > tbody > tr:nth-child(2)', 'td.fourth');
-		$data_headers = Matrix::array_remove_empty_columns($data_headers);
-		array_splice($data_headers[0], 1, 0, ["Poste"]);
+		if($include_headers === true) {
+			$data_headers = self::extract_data_from_dom($dom, 'body > table:nth-child(2) > tbody > tr > td > table > tbody > tr:nth-child(2)', 'td.fourth');
+			$data_headers = Matrix::array_remove_empty_columns($data_headers);
+			array_splice($data_headers[0], 1, 0, ["Poste"]);
+		}
+		else {
+			$data_headers = [];
+		}
 
 		// rows
 		$data = self::extract_data_from_dom($dom, 'body > table:nth-child(2) > tbody > tr:not(:nth-last-child(2)) > td > table > tbody > tr:nth-child(2)', 'td.second:not(:nth-child(2)):not(:nth-child(3))');
 		$data = Matrix::array_remove_empty_columns($data);
 
-		return $data_headers + $data;
+		return array_merge($data_headers, $data);
+	}
+	
+	public static function get_transfert_data_pages (int $nb_pages=1, int $start_offset=1)
+	{
+		if ($nb_pages < 1 || $start_offset < 1) {
+			throw new ErrorException("parameter problem");
+		}
+		
+		$res = [];
+		$page_num = $start_offset;
+		$cpt = 1;
+		do {
+			$data = VM::get_transfert_data ($page_num, false);
+			$res = array_merge($res, $data);
+			$cpt ++;
+			$page_num ++;
+		}
+		while ($cpt <= $nb_pages);
+		return $res;
 	}
 	
 }
