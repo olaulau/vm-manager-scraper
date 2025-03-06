@@ -1,2 +1,5 @@
-/config.inc.php
 /vendor/
+/node_modules/
+
+/conf/user.ini
+/tmp/

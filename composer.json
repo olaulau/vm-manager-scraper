@@ -1,7 +1,11 @@
 {
-	"autoload": {
-		"psr-4": {
-			"": "php/classes"
+	"repositories": [
+	    {
+	        "type": "vcs",
+	    	"url": "https://github.com/olaulau/HtmlSkel"
 		}
+	],
+	"require": {
+		"olaulau/htmlskel": "dev-master"
 	}
 }

@@ -6,6 +6,11 @@ use Lib\Matrix;
 use Lib\VM;
 
 
+// load FFF
+$f3 = \Base::instance();
+$f3->config('conf/index.ini');
+
+
 // auth
 VM::authenticate ($conf ["auth"] ["login"], $conf ["auth"] ["pass"]);
 
