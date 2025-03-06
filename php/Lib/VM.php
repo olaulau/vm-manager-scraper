@@ -1,42 +1,16 @@
 <?php
 namespace Lib;
 
-use Dom\HTMLDocument;
 use ErrorException;
 
 
 class VM
 {
 	
-	public static function display_html_tree (\Dom\Node $node, int $depth = 0): void
-	{
-		echo str_pad("", $depth, "\t") . $node->nodeName . PHP_EOL;
-		foreach ($node->childNodes as $child) {
-			self::display_html_tree($child, $depth + 1);
-		}
-	}
-	
 	public static function authenticate (string $login, string $password) : void
 	{
 		$url = "http://vm-manager.org/index.php?view=Login";
 		WebScrapper::query_with_curl($url, ["login" => $login, "pass" => $password]);
-	}
-	
-	
-	public static function extract_data_from_dom (HTMLDocument $dom, string $row_selector, string $cell_sub_selector) : array
-	{
-		$res = [];
-		$rows = $dom->querySelectorAll($row_selector);
-		foreach ($rows as $row) {
-			$row_data = [];
-			$cells = $row->querySelectorAll($cell_sub_selector);
-			foreach ($cells as $cell) {
-				$val = trim($cell->textContent);
-				$row_data [] = $val;
-			}
-			$res [] = $row_data;
-		}
-		return $res;
 	}
 	
 	
@@ -62,12 +36,12 @@ class VM
 		$dom = \Dom\HTMLDocument::createFromString($html, LIBXML_NOERROR);
 
 		// headers
-		$data_headers = self::extract_data_from_dom($dom, 'body > table:nth-child(2) > tbody > tr > td > table:first-child > tbody > tr:nth-child(2)', 'td.fourth');
+		$data_headers = WebScrapper::extract_data_from_dom($dom, 'body > table:nth-child(2) > tbody > tr > td > table:first-child > tbody > tr:nth-child(2)', 'td.fourth');
 		$data_headers = Matrix::array_remove_empty_columns($data_headers);
 		array_unshift($data_headers[0], "Poste"); // add missing header for first column
 
 		// rows
-		$data = self::extract_data_from_dom($dom, 'body > table:nth-child(2) > tbody > tr > td > table > tbody > tr:nth-child(2)', 'td.second');
+		$data = WebScrapper::extract_data_from_dom($dom, 'body > table:nth-child(2) > tbody > tr > td > table > tbody > tr:nth-child(2)', 'td.second');
 		$data = Matrix::array_remove_empty_columns($data);
 
 		return array_merge($data_headers, $data);
@@ -96,11 +70,11 @@ class VM
 		$dom = \Dom\HTMLDocument::createFromString($html, LIBXML_NOERROR);
 		
 		// headers
-		$data_headers = self::extract_data_from_dom($dom, 'body > form#postform > table > tbody > tr > td > table:first-child > tbody > tr:nth-child(2)', 'td.fourth');
+		$data_headers = WebScrapper::extract_data_from_dom($dom, 'body > form#postform > table > tbody > tr > td > table:first-child > tbody > tr:nth-child(2)', 'td.fourth');
 		$data_headers = Matrix::array_remove_empty_columns($data_headers);
 
 		// rows
-		$data = self::extract_data_from_dom($dom, 'body > form#postform > table > tbody > tr > td > table > tbody > tr:nth-child(2)', 'td.second:not(:nth-child(3)):not(:nth-child(6))');
+		$data = WebScrapper::extract_data_from_dom($dom, 'body > form#postform > table > tbody > tr > td > table > tbody > tr:nth-child(2)', 'td.second:not(:nth-child(3)):not(:nth-child(6))');
 		$data = Matrix::array_remove_empty_columns($data);
 
 		return array_merge($data_headers, $data);
@@ -130,13 +104,13 @@ class VM
 		$dom = \Dom\HTMLDocument::createFromString($html, LIBXML_NOERROR);
 		// display dom as HTML tree
 		/*
-		self::display_html_tree($dom);
+		WebScrapper::display_html_tree($dom);
 		die;
 		*/
 		
 		// headers
 		if($include_headers === true) {
-			$data_headers = self::extract_data_from_dom($dom, 'body > table:nth-child(2) > tbody > tr > td > table > tbody > tr:nth-child(2)', 'td.fourth');
+			$data_headers = WebScrapper::extract_data_from_dom($dom, 'body > table:nth-child(2) > tbody > tr > td > table > tbody > tr:nth-child(2)', 'td.fourth');
 			$data_headers = Matrix::array_remove_empty_columns($data_headers);
 			array_splice($data_headers[0], 1, 0, ["Poste"]);
 		}
@@ -145,7 +119,7 @@ class VM
 		}
 
 		// rows
-		$data = self::extract_data_from_dom($dom, 'body > table:nth-child(2) > tbody > tr:not(:nth-last-child(2)) > td > table > tbody > tr:nth-child(2)', 'td.second:not(:nth-child(2)):not(:nth-child(3))');
+		$data = WebScrapper::extract_data_from_dom($dom, 'body > table:nth-child(2) > tbody > tr:not(:nth-last-child(2)) > td > table > tbody > tr:nth-child(2)', 'td.second:not(:nth-child(2)):not(:nth-child(3))');
 		$data = Matrix::array_remove_empty_columns($data);
 
 		return array_merge($data_headers, $data);
