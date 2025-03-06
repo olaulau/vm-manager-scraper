@@ -107,9 +107,9 @@ class VM
 	}
 	
 	
-	public static function get_transfert_data () : array
+	public static function get_transfert_data (int $num_page=1) : array
 	{
-		$url = "https://vm-manager.org/Ajax_handler.php?phpsite=view_body.php&action=TransferList";
+		$url = "https://vm-manager.org/Ajax_handler.php?phpsite=view_body.php&action=TransferList&site=$num_page";
 		$raw_content = WebScrapper::query_with_curl($url, []);
 		
 		// clean JSON

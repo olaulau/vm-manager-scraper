@@ -10,25 +10,27 @@ use Lib\VM;
 VM::authenticate ($conf ["auth"] ["login"], $conf ["auth"] ["pass"]);
 
 // get team data
-$players_data = VM::get_team_data ();
 ?>
 <h2>team</h2>
 <?php
+$players_data = VM::get_team_data ();
 Matrix::display_html_table ($players_data);
 // Matrix::send_csv_table ($players_data);
 
 
 // get league data
-$league_data = VM::get_league_data ();
 ?>
 <h2>league</h2>
 <?php
+$league_data = VM::get_league_data ();
 Matrix::display_html_table ($league_data);
 
 
 // get transfert data
-$transferts_data = VM::get_transfert_data ();
 ?>
 <h2>transferts</h2>
 <?php
+$transferts_data = VM::get_transfert_data ();
+Matrix::display_html_table ($transferts_data);
+$transferts_data = VM::get_transfert_data (2);
 Matrix::display_html_table ($transferts_data);
