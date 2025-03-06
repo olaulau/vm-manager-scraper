@@ -1,6 +1,10 @@
 <?php
 namespace COMMON__\ctrl;
 
+use Lib\Matrix;
+use Lib\VM;
+
+
 class IndexCtrl extends Ctrl
 {
 
@@ -33,6 +37,46 @@ class IndexCtrl extends Ctrl
 		];
 		
 		self::renderPage($page);
+	}
+	
+	
+	public static function testGET (\Base $f3, $url, $controler)
+	{
+		// load FFF
+		$f3 = \Base::instance();
+		$f3->config('conf/index.ini');
+
+
+		// auth
+		$conf = $f3->get("conf");
+		VM::authenticate ($conf ["auth"] ["login"], $conf ["auth"] ["pass"]);
+
+
+		// get team data
+		?>
+		<h2>team</h2>
+		<?php
+		$players_data = VM::get_team_data ();
+		Matrix::display_html_table ($players_data);
+		// Matrix::send_csv_table ($players_data);
+
+
+		// get league data
+		?>
+		<h2>league</h2>
+		<?php
+		$league_data = VM::get_league_data ();
+		Matrix::display_html_table ($league_data);
+
+
+		// get transfert data
+		?>
+		<h2>transferts</h2>
+		<?php
+		$transferts_data = VM::get_transfert_data_pages(4);
+		Matrix::display_html_table ($transferts_data);
+		
+		die;
 	}
 	
 }
