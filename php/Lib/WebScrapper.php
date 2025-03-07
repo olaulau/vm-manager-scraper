@@ -9,6 +9,9 @@ use ErrorException;
 class WebScrapper
 {
 
+	/**
+	 * @deprecated
+	 */
 	public static array $cookie_headers = [];
 
 
@@ -18,6 +21,7 @@ class WebScrapper
 	}
 
 
+	#[\Deprecated]
 	public static function query_with_curl (string $url, array $post_fields) : bool|string
 	{
 		$ch = curl_init();

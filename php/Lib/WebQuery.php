@@ -41,7 +41,7 @@ class WebQuery
 		// set curl options
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($ch, CURLOPT_URL, $this->url);
-		curl_setopt($ch, CURLOPT_COOKIE, WebScrapper::get_cookies_str());
+		curl_setopt($ch, CURLOPT_COOKIE, $this->wt->get_cookies_str());
 		// curl_setopt($ch, CURLOPT_HTTPHEADER, ["Cookie: " . self::get_cookies_str()]); ///////////////
 		curl_setopt($ch, CURLOPT_HTTPHEADER, ["Accept-Language: fr"]);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $this->post_fields);

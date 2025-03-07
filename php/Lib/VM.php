@@ -15,15 +15,18 @@ class VM
 		$url = "http://vm-manager.org/index.php?view=Login";
 		$query = $this->wt->createQuery($url, ["login" => $login, "pass" => $password]);
 		$query_res = $query->send();
-		$res = strpos($query_res, "Vous avez entré un login ou un mot de passe incorrect.") === false; // we should see this string only on failed auth
+		$res = !str_contains($query_res, "Vous avez entré un login ou un mot de passe incorrect."); // we should see this string only on failed auth
 		return ($res);
 	}
 	
 	
-	public static function get_team_data () : array
+	public function get_team_data () : array
 	{
 		$url = "http://vm-manager.org/Ajax_handler.php?phpsite=view_body.php&action=Squad";
-		$raw_content = WebScrapper::query_with_curl($url, []);
+		// $raw_content = WebScrapper::query_with_curl($url, []);
+		$query = $this->wt->createQuery($url);
+		$raw_content = $query->send();
+		
 
 		// clean JSON
 		$raw_content = WebScrapper::clean_dirty_json($raw_content);
@@ -31,12 +34,15 @@ class VM
 		// validate JSON
 		$valid = json_validate($raw_content);
 		if($valid === false) {
-			throw new ErrorException(json_last_error() . " : " . json_last_error_msg());
+			throw new ErrorException("JSON error " . json_last_error() . " : " . json_last_error_msg());
 		}
 
 		// decode JSON
 		$decoded = json_decode($raw_content, true);
 		$html = $decoded ["body"];
+		if(str_starts_with($html, "session Error")) {
+			throw new ErrorException("unexpected error : " . $html);
+		}
 
 		// browse HTML v5
 		$dom = \Dom\HTMLDocument::createFromString($html, LIBXML_NOERROR);

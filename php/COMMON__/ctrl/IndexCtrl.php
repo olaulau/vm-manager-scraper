@@ -1,6 +1,7 @@
 <?php
 namespace COMMON__\ctrl;
 
+use ErrorException;
 use Lib\Matrix;
 use Lib\VM;
 use Lib\WebsiteTalk;
@@ -53,15 +54,16 @@ class IndexCtrl extends Ctrl
 		
 		// auth
 		$auth_res = $vm->authenticate ($conf ["auth"] ["login"], $conf ["auth"] ["pass"]);
-		var_dump($auth_res);
-		die;
+		if($auth_res !== true) {
+			throw new ErrorException("authentication failed");
+		}
 
 
 		// get team data
 		?>
 		<h2>team</h2>
 		<?php
-		$players_data = VM::get_team_data ();
+		$players_data = $vm->get_team_data ();
 		Matrix::display_html_table ($players_data);
 		// Matrix::send_csv_table ($players_data);
 
