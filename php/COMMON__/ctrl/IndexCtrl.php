@@ -68,12 +68,11 @@ class IndexCtrl extends Ctrl
 		// Matrix::send_csv_table ($players_data);
 
 
-		/*
 		// get league data
 		?>
 		<h2>league</h2>
 		<?php
-		$league_data = VM::get_league_data ();
+		$league_data = $vm->get_league_data ();
 		Matrix::display_html_table ($league_data);
 
 
@@ -81,9 +80,8 @@ class IndexCtrl extends Ctrl
 		?>
 		<h2>transferts</h2>
 		<?php
-		$transferts_data = VM::get_transfert_data_pages(4);
+		$transferts_data = $vm->get_transfert_data_pages(4);
 		Matrix::display_html_table ($transferts_data);
-		*/
 		
 		die;
 	}

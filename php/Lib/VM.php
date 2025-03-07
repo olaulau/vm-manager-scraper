@@ -23,7 +23,6 @@ class VM
 	public function get_team_data () : array
 	{
 		$url = "http://vm-manager.org/Ajax_handler.php?phpsite=view_body.php&action=Squad";
-		// $raw_content = WebScrapper::query_with_curl($url, []);
 		$query = $this->wt->createQuery($url);
 		$raw_content = $query->send();
 		
@@ -60,10 +59,11 @@ class VM
 	}
 	
 	
-	public static function get_league_data () : array
+	public function get_league_data () : array
 	{
 		$url = "https://vm-manager.org/Ajax_handler.php?phpsite=view_body.php&action=League";
-		$raw_content = WebScrapper::query_with_curl($url, []);
+		$query = $this->wt->createQuery($url);
+		$raw_content = $query->send();
 		
 		// clean JSON
 		$raw_content = WebScrapper::clean_dirty_json($raw_content);
@@ -93,10 +93,11 @@ class VM
 	}
 	
 	
-	public static function get_transfert_data (int $num_page=1, bool $include_headers=true) : array
+	public function get_transfert_data (int $num_page=1, bool $include_headers=true) : array
 	{
 		$url = "https://vm-manager.org/Ajax_handler.php?phpsite=view_body.php&action=TransferList&site=$num_page";
-		$raw_content = WebScrapper::query_with_curl($url, []);
+		$query = $this->wt->createQuery($url);
+		$raw_content = $query->send();
 		
 		// clean JSON
 		$raw_content = WebScrapper::clean_dirty_json($raw_content);
@@ -137,7 +138,7 @@ class VM
 		return array_merge($data_headers, $data);
 	}
 	
-	public static function get_transfert_data_pages (int $nb_pages=1, int $start_offset=1)
+	public function get_transfert_data_pages (int $nb_pages=1, int $start_offset=1)
 	{
 		if ($nb_pages < 1 || $start_offset < 1) {
 			throw new ErrorException("parameter problem");
@@ -147,7 +148,7 @@ class VM
 		$page_num = $start_offset;
 		$cpt = 1;
 		do {
-			$data = VM::get_transfert_data ($page_num, false);
+			$data = $this->get_transfert_data ($page_num, false);
 			$res = array_merge($res, $data);
 			$cpt ++;
 			$page_num ++;
