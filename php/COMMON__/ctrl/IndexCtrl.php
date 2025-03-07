@@ -3,7 +3,7 @@ namespace COMMON__\ctrl;
 
 use Lib\Matrix;
 use Lib\VM;
-
+use Lib\WebsiteTalk;
 
 class IndexCtrl extends Ctrl
 {
@@ -45,11 +45,16 @@ class IndexCtrl extends Ctrl
 		// load FFF
 		$f3 = \Base::instance();
 		$f3->config('conf/index.ini');
-
-
-		// auth
+		
+		
+		// prepare talk
 		$conf = $f3->get("conf");
-		VM::authenticate ($conf ["auth"] ["login"], $conf ["auth"] ["pass"]);
+		$vm = new VM ();
+		
+		// auth
+		$auth_res = $vm->authenticate ($conf ["auth"] ["login"], $conf ["auth"] ["pass"]);
+		var_dump($auth_res);
+		die;
 
 
 		// get team data
@@ -61,6 +66,7 @@ class IndexCtrl extends Ctrl
 		// Matrix::send_csv_table ($players_data);
 
 
+		/*
 		// get league data
 		?>
 		<h2>league</h2>
@@ -75,6 +81,7 @@ class IndexCtrl extends Ctrl
 		<?php
 		$transferts_data = VM::get_transfert_data_pages(4);
 		Matrix::display_html_table ($transferts_data);
+		*/
 		
 		die;
 	}

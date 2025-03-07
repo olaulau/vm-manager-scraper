@@ -7,10 +7,16 @@ use ErrorException;
 class VM
 {
 	
-	public static function authenticate (string $login, string $password) : void
+	function __construct (private WebsiteTalk $wt = new WebsiteTalk ()) {}
+	
+	
+	public function authenticate (string $login, string $password) : bool
 	{
 		$url = "http://vm-manager.org/index.php?view=Login";
-		WebScrapper::query_with_curl($url, ["login" => $login, "pass" => $password]);
+		$query = $this->wt->createQuery($url, ["login" => $login, "pass" => $password]);
+		$query_res = $query->send();
+		$res = strpos($query_res, "Vous avez entré un login ou un mot de passe incorrect.") === false; // we should see this string only on failed auth
+		return ($res);
 	}
 	
 	

@@ -9,7 +9,7 @@ use ErrorException;
 class WebScrapper
 {
 
-	public static array $cookies_headers = [];
+	public static array $cookie_headers = [];
 
 
 	public function construct__ () : void
@@ -25,13 +25,13 @@ class WebScrapper
 		// intercept response headers
 		$headers = [];
 		curl_setopt($ch, CURLOPT_HEADERFUNCTION,
-			function($curl, $header) use (&$headers)
+			function ($curl, $header) use (&$headers)
 			{
-				$len = strlen($header);
-				$header = explode(':', $header, 2);
-				if (count($header) < 2) // ignore invalid headers
+				$len = strlen ($header);
+				$header = explode (':', $header, 2);
+				if (count( $header) < 2) // ignore invalid headers
 					return $len;
-				$headers[strtolower(trim($header[0]))][] = trim($header[1]);
+				$headers [strtolower (trim ($header [0]))] [] = trim ($header [1]);
 				return $len;
 			}
 		);
@@ -40,6 +40,7 @@ class WebScrapper
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_COOKIE, self::get_cookies_str());
+		// curl_setopt($ch, CURLOPT_HTTPHEADER, ["Cookie: " . self::get_cookies_str()]); ///////////////
 		curl_setopt($ch, CURLOPT_HTTPHEADER, ["Accept-Language: fr"]);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $post_fields);
 		
@@ -60,7 +61,7 @@ class WebScrapper
 
 		// store cookies extracted from header (if any)
 		if(!empty($headers ["set-cookie"])) {
-			self::$cookies_headers = $headers ["set-cookie"];
+			self::$cookie_headers = $headers ["set-cookie"];
 		}
 
 		return $res;
@@ -70,7 +71,7 @@ class WebScrapper
 	public static function get_cookies_str () : string
 	{
 		$cookies = [];
-		foreach (self::$cookies_headers as $cookie_header) {
+		foreach (self::$cookie_headers as $cookie_header) {
 			$cookies [] = substr($cookie_header, 0, strpos($cookie_header, "; "));
 		}
 		$cookies_str = implode("; ", $cookies);
