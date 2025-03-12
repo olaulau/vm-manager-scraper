@@ -63,12 +63,14 @@ class VM
 
 		// headers
 		$data_headers = WebScrapper::extract_data_from_dom($dom, 'body > table:nth-child(2) > tbody > tr > td > table:first-child > tbody > tr:nth-child(2)', 'td.fourth');
-		$data_headers = Matrix::array_remove_empty_columns($data_headers);
+		$data_headers = Matrix::remove_empty_columns($data_headers);
 		array_unshift($data_headers[0], "Poste"); // add missing header for first column
 
 		// rows
 		$data = WebScrapper::extract_data_from_dom($dom, 'body > table:nth-child(2) > tbody > tr > td > table > tbody > tr:nth-child(2)', 'td.second');
-		$data = Matrix::array_remove_empty_columns($data);
+		$data = Matrix::remove_empty_columns($data);
+		$data = Matrix::pack($data);
+		$data = Matrix::format_values($data, ["string", "string", "int", "int", "int", "int", "int", "int"]);
 
 		return array_merge($data_headers, $data);
 	}
@@ -98,11 +100,13 @@ class VM
 		
 		// headers
 		$data_headers = WebScrapper::extract_data_from_dom($dom, 'body > form#postform > table > tbody > tr > td > table:first-child > tbody > tr:nth-child(2)', 'td.fourth');
-		$data_headers = Matrix::array_remove_empty_columns($data_headers);
+		$data_headers = Matrix::remove_empty_columns($data_headers);
 
 		// rows
 		$data = WebScrapper::extract_data_from_dom($dom, 'body > form#postform > table > tbody > tr > td > table > tbody > tr:nth-child(2)', 'td.second:not(:nth-child(3)):not(:nth-child(6))');
-		$data = Matrix::array_remove_empty_columns($data);
+		$data = Matrix::remove_empty_columns($data);
+		$data = Matrix::pack($data);
+		$data = Matrix::format_values($data, ["string", "int", "int", "int", "int", "string", "string", "string"]);
 
 		return array_merge($data_headers, $data);
 	}
@@ -138,12 +142,15 @@ class VM
 		
 		// headers
 		$data_headers = WebScrapper::extract_data_from_dom($dom, 'body > table:nth-child(2) > tbody > tr > td > table > tbody > tr:nth-child(2)', 'td.fourth');
-		$data_headers = Matrix::array_remove_empty_columns($data_headers);
+		$data_headers = Matrix::remove_empty_columns($data_headers);
 		array_splice($data_headers[0], 1, 0, ["Poste"]);
 
 		// rows
 		$data = WebScrapper::extract_data_from_dom($dom, 'body > table:nth-child(2) > tbody > tr:not(:nth-last-child(2)) > td > table > tbody > tr:nth-child(2)', 'td.second:not(:nth-child(2)):not(:nth-child(3))');
-		$data = Matrix::array_remove_empty_columns($data);
+		$data = Matrix::remove_empty_columns($data);
+		$data = Matrix::pack($data);
+		$data = Matrix::format_values($data, ["datetime", "string", "string", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", ]);
+
 
 		return array_merge($data_headers, $data);
 	}

@@ -5,14 +5,8 @@ use Dom\HTMLDocument;
 use Dom\Node;
 
 
-class WebScrapper
+abstract class WebScrapper
 {
-
-	public function construct__ () : void
-	{
-
-	}
-
 
 	public static function clean_dirty_json (string $json) : string
 	{

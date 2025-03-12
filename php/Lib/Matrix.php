@@ -72,21 +72,21 @@ class Matrix
 	}
 
 
-	public static function array_transpose (array $data): array
+	public static function transpose (array $data): array
 	{
 		$res = [];
 		foreach ($data as $y => $row) {
 			foreach ($row as $x => $val) {
-				$res[$x][$y] = $val;
+				$res [$x] [$y] = $val;
 			}
 		}
 		return $res;
 	}
 
 
-	public static function array_remove_empty_columns (array $data): array
+	public static function remove_empty_columns (array $data): array
 	{
-		$res = self::array_transpose($data);
+		$res = self::transpose($data);
 
 		foreach ($res as $y => $row) {
 			$empty = true;
@@ -97,11 +97,47 @@ class Matrix
 				}
 			}
 			if ($empty === true) {
-				unset($res[$y]);
+				unset ($res [$y]);
 			}
 		}
 
-		return self::array_transpose($res);
+		return self::transpose($res);
+	}
+	
+	
+	public static function pack (array $data) : array
+	{
+		foreach ($data as &$val) {
+			if (is_array($val)) {
+				$val = self::pack($val);
+			}
+		}
+		
+		$keys = range(0, count($data)-1);
+		$values = array_values($data);
+		$data = array_combine($keys, $values);
+		return $data;
+	}
+	
+	
+	public static function format_values (array $data, array $formats): array
+	{
+		foreach ($data as $y => &$row) {
+			foreach ($row as $x => &$val) {
+				$format = $formats [$x];
+				switch ($format) {
+					case "float":
+					case "int" :
+						$val = preg_replace('/[^\d]+/', '', $val);
+						$val = intval($val);
+						break;
+					case "string" :
+					default:
+						break;
+				}
+			}
+		}
+		return $data;
 	}
 
 }
