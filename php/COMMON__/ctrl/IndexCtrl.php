@@ -64,7 +64,7 @@ class IndexCtrl extends Ctrl
 		$players_data = $vm->get_team_data ();
 		Matrix::display_html_table ($players_data);
 		// Matrix::send_csv_table ($players_data);
-
+		
 		// get league data
 		?>
 		<h2>league</h2>
@@ -80,7 +80,7 @@ class IndexCtrl extends Ctrl
 		Matrix::display_html_table ($transferts_data);
 		
 		// display talk stats
-		echo "<hr> {$vm->wt->queries_count} queries (" . number_format ($vm->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
+		echo "<hr> {$vm->wt->queries_count} quer" . ($vm->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vm->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
 		
 		die;
 	}

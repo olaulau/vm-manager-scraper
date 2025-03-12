@@ -7,21 +7,15 @@ use ErrorException;
 class WebQuery
 {
 	
-	private array $response_headers;
-	private array $response_infos;
-	private string $response_body;
+	public array $response_headers;
+	public array $response_infos;
+	public string $response_body;
 	
 	
-	public function __construct (private string $url, private array $post_fields, private WebsiteTalk $wt = new WebsiteTalk()) {}
+	public function __construct (public string $url, public array $post_fields, public WebsiteTalk $wt = new WebsiteTalk()) {}
 	
 	
-	public function get_website_talk ()
-	{
-		return $this->wt;
-	}
-	
-	
-	public function send () : bool|string
+	public function send () : bool|string //TODO return void, use $this->response_body instead
 	{
 		$ch = curl_init();
 
@@ -65,10 +59,6 @@ class WebQuery
 		$this->wt->queries_count ++;
 		$this->wt->queries_duration += $this->response_infos ["total_time"];
 		
-		////////////
-		// var_dump($this->response_headers, $this->response_infos, $this->response_body);
-		// die;
-
 		return $this->response_body;
 	}
 	

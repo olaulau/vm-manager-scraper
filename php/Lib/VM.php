@@ -1,6 +1,7 @@
 <?php
 namespace Lib;
 
+use Cache;
 use ErrorException;
 
 
@@ -12,10 +13,25 @@ class VM
 	
 	public function authenticate (string $login, string $password) : bool
 	{
+		$cache = Cache::instance();
+		$cache_key = "Login_{$login}_{$password}";
+		
+		// check if we don't have cookies in cache, to avoid remote auth
+		$cookies = $cache->get ($cache_key);
+		if (!empty ($cookies)) {
+			$this->wt->cookie_headers = $cookies;
+			return true;
+		}
+		
 		$url = "http://vm-manager.org/index.php?view=Login";
 		$query = $this->wt->createQuery($url, ["login" => $login, "pass" => $password]);
-		$query_res = $query->send();
+		$query->send();
+		$query_res = $query->response_body;
 		$res = !str_contains($query_res, "Vous avez entré un login ou un mot de passe incorrect."); // we should see this string only on failed auth
+		if($res === true) { // store cookies in cache for 1 day
+			$cookies = $query->response_headers ["set-cookie"];
+			$cache->set ($cache_key, $cookies, 86400);
+		}
 		return ($res);
 	}
 	
