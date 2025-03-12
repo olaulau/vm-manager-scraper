@@ -25,7 +25,6 @@ class VM
 		$url = "http://vm-manager.org/Ajax_handler.php?phpsite=view_body.php&action=Squad";
 		$query = $this->wt->createQuery($url);
 		$raw_content = $query->send();
-		
 
 		// clean JSON
 		$raw_content = WebScrapper::clean_dirty_json($raw_content);

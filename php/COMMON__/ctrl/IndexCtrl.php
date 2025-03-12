@@ -47,7 +47,6 @@ class IndexCtrl extends Ctrl
 		$f3 = \Base::instance();
 		$f3->config('conf/index.ini');
 		
-		
 		// prepare talk
 		$conf = $f3->get("conf");
 		$vm = new VM ();
@@ -57,8 +56,7 @@ class IndexCtrl extends Ctrl
 		if($auth_res !== true) {
 			throw new ErrorException("authentication failed");
 		}
-
-
+		
 		// get team data
 		?>
 		<h2>team</h2>
@@ -67,14 +65,12 @@ class IndexCtrl extends Ctrl
 		Matrix::display_html_table ($players_data);
 		// Matrix::send_csv_table ($players_data);
 
-
 		// get league data
 		?>
 		<h2>league</h2>
 		<?php
 		$league_data = $vm->get_league_data ();
 		Matrix::display_html_table ($league_data);
-
 
 		// get transfert data
 		?>
@@ -83,8 +79,8 @@ class IndexCtrl extends Ctrl
 		$transferts_data = $vm->get_transfert_data_pages(4);
 		Matrix::display_html_table ($transferts_data);
 		
-		// display query count
-		echo "<hr> query count : {$vm->wt->query_count} <br/>" . PHP_EOL;
+		// display talk stats
+		echo "<hr> {$vm->wt->queries_count} queries (" . number_format ($vm->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
 		
 		die;
 	}

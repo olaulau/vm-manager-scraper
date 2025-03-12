@@ -7,8 +7,8 @@ use ErrorException;
 class WebQuery
 {
 	
-	private int $response_status;
 	private array $response_headers;
+	private array $response_infos;
 	private string $response_body;
 	
 	
@@ -28,11 +28,11 @@ class WebQuery
 		// intercept response headers
 		$headers = [];
 		curl_setopt($ch, CURLOPT_HEADERFUNCTION,
-			function ($curl, $header) use (&$headers)
+			function (/*resource*/ $curl, string $header) use (&$headers)
 			{
 				$len = strlen ($header);
 				$header = explode (':', $header, 2);
-				if (count( $header) < 2) // ignore invalid headers
+				if (count ($header) < 2) // ignore invalid headers
 					return $len;
 				$headers [strtolower (trim ($header [0]))] [] = trim ($header [1]);
 				return $len;
@@ -47,30 +47,29 @@ class WebQuery
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $this->post_fields);
 		
 		// send http query
-		$res = curl_exec($ch);
+		$this->response_body = curl_exec($ch);
 		if (curl_errno($ch)) {
 			throw new ErrorException(curl_errno($ch) . " : " . curl_error($ch));
 		}
 
-		// show query infos
-		/*
-		$info = curl_getinfo($ch);
-		echo 'Took ', $info['total_time'], ' seconds to send a request to ', $info['url'], "\n";
-		var_dump($info);
-		echo $res;
-		die;
-		*/
-
+		// store query infos
+		$this->response_infos = curl_getinfo($ch);
+		
 		// store cookies extracted from header (if any)
-		if(!empty($headers ["set-cookie"])) {
-			$this->wt->cookie_headers = $headers ["set-cookie"];
+		$this->response_headers = $headers;
+		if(!empty($this->response_headers ["set-cookie"])) {
+			$this->wt->cookie_headers = $this->response_headers ["set-cookie"];
 		}
 		
-		// increment query count for the talk
-		$this->wt->query_count ++;
+		// update talk stats
+		$this->wt->queries_count ++;
+		$this->wt->queries_duration += $this->response_infos ["total_time"];
+		
+		////////////
+		// var_dump($this->response_headers, $this->response_infos, $this->response_body);
+		// die;
 
-		return $res;
+		return $this->response_body;
 	}
-	
 	
 }
