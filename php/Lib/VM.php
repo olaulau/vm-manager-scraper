@@ -7,7 +7,7 @@ use ErrorException;
 class VM
 {
 	
-	function __construct (private WebsiteTalk $wt = new WebsiteTalk ()) {}
+	function __construct (public WebsiteTalk $wt = new WebsiteTalk ()) {}
 	
 	
 	public function authenticate (string $login, string $password) : bool

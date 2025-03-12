@@ -3,6 +3,7 @@ namespace Lib;
 
 use ErrorException;
 
+
 class WebQuery
 {
 	
@@ -64,6 +65,9 @@ class WebQuery
 		if(!empty($headers ["set-cookie"])) {
 			$this->wt->cookie_headers = $headers ["set-cookie"];
 		}
+		
+		// increment query count for the talk
+		$this->wt->query_count ++;
 
 		return $res;
 	}

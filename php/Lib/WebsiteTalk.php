@@ -6,6 +6,7 @@ class WebsiteTalk
 {
 	
 	public array $cookie_headers=[];
+	public int $query_count = 0;
 	
 	
 	public function createQuery (string $url, array $post_fields=[]) : WebQuery

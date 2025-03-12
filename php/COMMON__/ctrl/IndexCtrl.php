@@ -4,7 +4,7 @@ namespace COMMON__\ctrl;
 use ErrorException;
 use Lib\Matrix;
 use Lib\VM;
-use Lib\WebsiteTalk;
+
 
 class IndexCtrl extends Ctrl
 {
@@ -82,6 +82,9 @@ class IndexCtrl extends Ctrl
 		<?php
 		$transferts_data = $vm->get_transfert_data_pages(4);
 		Matrix::display_html_table ($transferts_data);
+		
+		// display query count
+		echo "<hr> query count : {$vm->wt->query_count} <br/>" . PHP_EOL;
 		
 		die;
 	}
