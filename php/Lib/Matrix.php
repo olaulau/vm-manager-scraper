@@ -6,8 +6,20 @@ class Matrix
 
 	public static function display_html_table (array $data): void
 	{
+		$headers = array_shift($data);
 		?>
 		<table>
+			<thead>
+				<tr>
+					<?php
+					foreach ($headers as $val) {
+						?>
+						<th><?= $val ?></th>
+						<?php
+					}
+					?>
+				</tr>
+			</thead>
 			<tbody>
 				<?php
 				foreach ($data as $row) {
@@ -27,8 +39,15 @@ class Matrix
 			</tbody>
 		</table>
 		<style>
-			table, tr, td {
+			table {
+				border-collapse: collapse;
+				border: 2px black solid;
+			}
+			td, th {
 				border: 1px grey solid;
+			}
+			th {
+				background-color: lightgrey;
 			}
 		</style>
 		<?php
