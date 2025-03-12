@@ -57,6 +57,32 @@ class IndexCtrl extends Ctrl
 			throw new ErrorException("authentication failed");
 		}
 		
+		// do stuff
+		//TODO
+		
+		// display talk stats
+		echo "<hr> {$vm->wt->queries_count} quer" . ($vm->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vm->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
+		
+		die;
+	}
+	
+	
+	public static function teamGET (\Base $f3, $url, $controler)
+	{
+		// load FFF
+		$f3 = \Base::instance();
+		$f3->config('conf/index.ini');
+		
+		// prepare talk
+		$conf = $f3->get("conf");
+		$vm = new VM ();
+		
+		// auth
+		$auth_res = $vm->authenticate ($conf ["auth"] ["login"], $conf ["auth"] ["pass"]);
+		if($auth_res !== true) {
+			throw new ErrorException("authentication failed");
+		}
+		
 		// get team data
 		?>
 		<h2>team</h2>
@@ -65,12 +91,58 @@ class IndexCtrl extends Ctrl
 		Matrix::display_html_table ($players_data);
 		// Matrix::send_csv_table ($players_data);
 		
+		// display talk stats
+		echo "<hr> {$vm->wt->queries_count} quer" . ($vm->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vm->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
+		
+		die;
+	}
+	
+	
+	public static function leagueGET (\Base $f3, $url, $controler)
+	{
+		// load FFF
+		$f3 = \Base::instance();
+		$f3->config('conf/index.ini');
+		
+		// prepare talk
+		$conf = $f3->get("conf");
+		$vm = new VM ();
+		
+		// auth
+		$auth_res = $vm->authenticate ($conf ["auth"] ["login"], $conf ["auth"] ["pass"]);
+		if($auth_res !== true) {
+			throw new ErrorException("authentication failed");
+		}
+		
 		// get league data
 		?>
 		<h2>league</h2>
 		<?php
 		$league_data = $vm->get_league_data ();
 		Matrix::display_html_table ($league_data);
+		
+		// display talk stats
+		echo "<hr> {$vm->wt->queries_count} quer" . ($vm->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vm->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
+		
+		die;
+	}
+	
+	
+	public static function transfertsGET (\Base $f3, $url, $controler)
+	{
+		// load FFF
+		$f3 = \Base::instance();
+		$f3->config('conf/index.ini');
+		
+		// prepare talk
+		$conf = $f3->get("conf");
+		$vm = new VM ();
+		
+		// auth
+		$auth_res = $vm->authenticate ($conf ["auth"] ["login"], $conf ["auth"] ["pass"]);
+		if($auth_res !== true) {
+			throw new ErrorException("authentication failed");
+		}
 		
 		// get transfert data
 		?>
