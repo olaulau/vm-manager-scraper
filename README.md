@@ -17,7 +17,6 @@ PoC
 
 # TODO
 - get auth credential from an auth form (instead of static config)
-- parse table data into real formats (date, numbers ...)
 - store data into a cache (or sqlite, mysql) ?
 
 

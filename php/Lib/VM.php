@@ -149,7 +149,7 @@ class VM
 		$data = WebScrapper::extract_data_from_dom($dom, 'body > table:nth-child(2) > tbody > tr:not(:nth-last-child(2)) > td > table > tbody > tr:nth-child(2)', 'td.second:not(:nth-child(2)):not(:nth-child(3))');
 		$data = Matrix::remove_empty_columns($data);
 		$data = Matrix::pack($data);
-		$data = Matrix::format_values($data, ["datetime", "string", "string", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", ]);
+		$data = Matrix::format_values($data, ["DateTime", "string", "string", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", ]);
 
 
 		return array_merge($data_headers, $data);

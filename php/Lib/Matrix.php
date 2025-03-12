@@ -1,6 +1,7 @@
 <?php
 namespace Lib;
 
+use DateTime;
 
 class Matrix
 {
@@ -12,6 +13,9 @@ class Matrix
 		switch ($type) {
 			case "int" :
 				return number_format ($val, 0, ",", " ");
+				break;
+			case "DateTime" :
+				return $val->format("d/m h:i");
 				break;
 			case "string" :
 			default :
@@ -146,13 +150,15 @@ class Matrix
 			foreach ($row as $x => &$val) {
 				$format = $formats [$x];
 				switch ($format) {
-					case "float":
 					case "int" :
 						$val = preg_replace('/[^\d]+/', '', $val);
 						$val = intval($val);
 						break;
+					case "DateTime" :
+						$val = DateTime::createFromFormat("d.m h:i", $val);
+						break;
 					case "string" :
-					default:
+					default :
 						break;
 				}
 			}
