@@ -71,7 +71,7 @@ class IndexCtrl extends Ctrl
 		<?php
 		$league_data = $vm->get_league_data ();
 		Matrix::display_html_table ($league_data);
-
+		
 		// get transfert data
 		?>
 		<h2>transferts</h2>

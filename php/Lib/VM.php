@@ -108,7 +108,7 @@ class VM
 	}
 	
 	
-	public function get_transfert_data (int $num_page=1, bool $include_headers=true) : array
+	public function get_transfert_data (int $num_page=1) : array
 	{
 		$url = "https://vm-manager.org/Ajax_handler.php?phpsite=view_body.php&action=TransferList&site=$num_page";
 		$query = $this->wt->createQuery($url);
@@ -137,14 +137,9 @@ class VM
 		*/
 		
 		// headers
-		if($include_headers === true) {
-			$data_headers = WebScrapper::extract_data_from_dom($dom, 'body > table:nth-child(2) > tbody > tr > td > table > tbody > tr:nth-child(2)', 'td.fourth');
-			$data_headers = Matrix::array_remove_empty_columns($data_headers);
-			array_splice($data_headers[0], 1, 0, ["Poste"]);
-		}
-		else {
-			$data_headers = [];
-		}
+		$data_headers = WebScrapper::extract_data_from_dom($dom, 'body > table:nth-child(2) > tbody > tr > td > table > tbody > tr:nth-child(2)', 'td.fourth');
+		$data_headers = Matrix::array_remove_empty_columns($data_headers);
+		array_splice($data_headers[0], 1, 0, ["Poste"]);
 
 		// rows
 		$data = WebScrapper::extract_data_from_dom($dom, 'body > table:nth-child(2) > tbody > tr:not(:nth-last-child(2)) > td > table > tbody > tr:nth-child(2)', 'td.second:not(:nth-child(2)):not(:nth-child(3))');
@@ -163,12 +158,15 @@ class VM
 		$page_num = $start_offset;
 		$cpt = 1;
 		do {
-			$data = $this->get_transfert_data ($page_num, false);
+			$data = $this->get_transfert_data ($page_num);
+			$headers = array_shift($data);
+			
 			$res = array_merge($res, $data);
 			$cpt ++;
 			$page_num ++;
 		}
 		while ($cpt <= $nb_pages);
+		$res = array_merge([$headers], $res);
 		return $res;
 	}
 	
