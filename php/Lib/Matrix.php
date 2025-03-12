@@ -1,9 +1,26 @@
 <?php
 namespace Lib;
 
+
 class Matrix
 {
+	
+	
+	public static function format_value (mixed $val) : string
+	{
+		$type = get_debug_type ($val);
+		switch ($type) {
+			case "int" :
+				return number_format ($val, 0, ",", " ");
+				break;
+			case "string" :
+			default :
+				return "".$val;
+				break;
+		}
+	}
 
+	
 	public static function display_html_table (array $data): void
 	{
 		$headers = array_shift($data);
@@ -28,7 +45,7 @@ class Matrix
 						<?php
 						foreach ($row as $val) {
 							?>
-							<td><?= $val ?></td>
+							<td><?= self::format_value ($val) ?></td>
 							<?php
 						}
 						?>
@@ -45,9 +62,12 @@ class Matrix
 			}
 			td, th {
 				border: 1px grey solid;
+				padding: 2px;
 			}
 			th {
 				background-color: lightgrey;
+				font-size: larger;
+				font-weight: normal;
 			}
 		</style>
 		<?php
