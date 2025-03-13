@@ -4,6 +4,7 @@ namespace Lib;
 use Cache;
 use Dom\HTMLElement;
 use Dom\Node;
+use Error;
 use ErrorException;
 
 
@@ -200,55 +201,69 @@ class VM
 		// WebScrapper::display_html_tree($dom);
 		// die;
 		
-		$node_list = $dom->querySelectorAll("body > table:nth-child(1) > tbody > tr");
-		$nodes_array = iterator_to_array($node_list);
-		$nodes_splited = array_chunk ($nodes_array, 7);
+		$tr1_list = $dom->querySelectorAll("body > table:nth-child(1) > tbody > tr");
+		$tr1_array = iterator_to_array($tr1_list);
+		$tr1_splited = array_chunk ($tr1_array, 7);
 		
 		$coaches = [];
-		foreach ($nodes_splited as $node_array) {
+		foreach ($tr1_splited as $tr1_array) {
 			$coach = [];
 			
-			$node = $node_array [0]; /** @var HTMLElement $node */
+			$node = $tr1_array [0]; /** @var HTMLElement $node */
 			$element = $node->querySelector("tr > td > table > tbody > tr:nth-child(2) > td:nth-child(3) > b > span");
 			$coach ["type"] = $element->textContent;
 			
 			$element = $node->querySelector("tr > td > table > tbody > tr:nth-child(2) > td:nth-child(4) > b > span > b");
 			$coach ["name"] = $element->textContent;
 			
-			$node = $node_array [2]; /** @var HTMLElement $node */
-			$node_list = $node->querySelectorAll("tr > td > table > tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr");
+			$node = $tr1_array [2]; /** @var HTMLElement $node */
+			$tr2_list = $node->querySelectorAll("tr > td > table > tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr");
 			
-			$node = $node_list->item(0);
+			$node = $tr2_list->item(0);
 			$element = $node->querySelector("tr > td:nth-child(3)");
 			$coach ["Entraînement physique"] = WebScrapper::parse_value($element->textContent, "int");
 			
 			$element = $node->querySelector("tr:nth-child(1) > td:nth-child(6)");
 			$coach ["Travail avec les juniors"] = WebScrapper::parse_value($element->textContent, "int");
 			
-			$node = $node_list->item(1);
+			$node = $tr2_list->item(1);
 			$element = $node->querySelector("tr > td:nth-child(2)");
 			$coach ["Entraînement technique"] = WebScrapper::parse_value($element->textContent, "int");
 			
 			$element = $node->querySelector("tr > td:nth-child(5)");
 			$coach ["Adaptabilité"] = WebScrapper::parse_value($element->textContent, "int");
 			
-			$node = $node_list->item(2);
+			$node = $tr2_list->item(2);
 			$element = $node->querySelector("tr > td:nth-child(2)");
 			$coach ["Psychologie"] = WebScrapper::parse_value($element->textContent, "int");
 			
 			$element = $node->querySelector("tr > td:nth-child(5)");
 			$coach ["Niveau de discipline"] = WebScrapper::parse_value($element->textContent, "int");
 			
-			$node = $node_list->item(3);
+			$node = $tr2_list->item(3);
 			$element = $node->querySelector("tr > td:nth-child(2)");
 			$coach ["Motivation"] = WebScrapper::parse_value($element->textContent, "int");
 			
-			$node = $node_list->item(4);
+			$node = $tr2_list->item(4);
 			$element = $node->querySelector("tr > td:nth-child(1)");
 			$coach ["age"] = WebScrapper::parse_value($element->textContent, "int");
 			
 			$element = $node->querySelector("tr > td:nth-child(2)");
 			$coach ["salaire"] = WebScrapper::parse_value($element->textContent, "int");
+			
+			$node = $tr1_array [4]; /** @var HTMLElement $node */
+			$changer = $node->querySelector("tr > td > table > tbody > tr:nth-child(2)");
+			$attributes = $changer->attributes;
+			$onclick_attribute = $attributes->getNamedItem("onclick");
+			$onclick_attribute->value;
+			$res = preg_match("/javascript:callGetViewPanelBody\('CoachChange&coachId=(\d+)'\);/", $onclick_attribute->value, $matches);
+			if($res === false) {
+				throw new ErrorException("regex error while looking for coach id");
+			}
+			if(empty($matches[1])) {
+				throw new ErrorException("coach di not found");
+			}
+			$coach ["id"] = $matches[1];
 			
 			$coaches [] = $coach;
 		}
