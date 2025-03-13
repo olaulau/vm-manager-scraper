@@ -3,6 +3,7 @@ namespace Lib;
 
 use DateTime;
 use Dom\HTMLDocument;
+use Dom\HTMLElement;
 use Dom\Node;
 
 
@@ -41,7 +42,15 @@ abstract class WebScrapper
 		if($depth === 0) {
 			?><pre><?php
 		}
-		echo str_pad("", $depth*4, " ") . $node->nodeName . "." . ($node->className ?? "") . " " . $node->nodeValue . " " . PHP_EOL;
+		
+		$id = "";
+		$class = "";
+		if($node instanceof HTMLElement) {
+			$id = $node->getAttribute("id");
+			$id = empty($id) ? "" : " #$id";
+			$class = empty($node->className) ? "" : " .$node->className";
+		}
+		echo str_pad("", $depth*4, " ") . $node->nodeName . $id . $class . " " . $node->nodeValue . " " . PHP_EOL;
 		foreach ($node->childNodes as $child) {
 			self::display_html_tree($child, $depth + 1);
 		}

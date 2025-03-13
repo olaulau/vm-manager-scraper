@@ -89,7 +89,7 @@ class Matrix
 	}
 
 
-	public static function remove_empty_columns (array $data): array
+	public static function remove_empty (array $data): array
 	{
 		$res = self::transpose($data);
 

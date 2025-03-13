@@ -63,7 +63,6 @@ class IndexCtrl extends Ctrl
 		
 		// display talk stats
 		echo "<hr> {$vm->wt->queries_count} quer" . ($vm->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vm->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
-		
 		die;
 	}
 	
@@ -94,7 +93,6 @@ class IndexCtrl extends Ctrl
 		
 		// display talk stats
 		echo "<hr> {$vm->wt->queries_count} quer" . ($vm->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vm->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
-		
 		die;
 	}
 	
@@ -124,7 +122,6 @@ class IndexCtrl extends Ctrl
 		
 		// display talk stats
 		echo "<hr> {$vm->wt->queries_count} quer" . ($vm->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vm->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
-		
 		die;
 	}
 	
@@ -154,7 +151,6 @@ class IndexCtrl extends Ctrl
 		
 		// display talk stats
 		echo "<hr> {$vm->wt->queries_count} quer" . ($vm->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vm->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
-		
 		die;
 	}
 	
@@ -182,9 +178,50 @@ class IndexCtrl extends Ctrl
 		$coaches_data = $vm->get_coaches_data();
 		Matrix::display_html_table ($coaches_data);
 		
+		array_shift($coaches_data); // remove headers
+		foreach ($coaches_data as $coach) {
+			?>
+			<a href="<?= $f3->get("BASE") . $f3->alias("coachChange", ["id" => $coach ["id"]]) ?>">changer <?= $coach ["id"] ?></a>
+			<?php
+		}
+		
 		// display talk stats
 		echo "<hr> {$vm->wt->queries_count} quer" . ($vm->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vm->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
+		die;
+	}
+	
+	
+	public static function coachChangeGET (Base $f3, array $url, string $controler)
+	{
+		// load FFF
+		$f3 = Base::instance();
+		$f3->config('conf/index.ini');
 		
+		// params
+		$coach_id = intval($f3->get("PARAMS.id"));
+		if(empty($coach_id) || $coach_id < 0) {
+			throw new ErrorException("invalid parameters");
+		}
+		
+		// prepare talk
+		$conf = $f3->get("conf");
+		$vm = new VM ();
+		
+		// auth
+		$auth_res = $vm->authenticate ($conf ["auth"] ["login"], $conf ["auth"] ["pass"]);
+		if($auth_res !== true) {
+			throw new ErrorException("authentication failed");
+		}
+		
+		// get coachChange data
+		?>
+		<h2>coach change (<?= $coach_id ?>)</h2>
+		<?php
+		$coach_change_data = $vm->get_coach_change_data_pages($coach_id, 4);
+		Matrix::display_html_table ($coach_change_data);
+		
+		// display talk stats
+		echo "<hr> {$vm->wt->queries_count} quer" . ($vm->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vm->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
 		die;
 	}
 	
