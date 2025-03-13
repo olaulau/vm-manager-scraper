@@ -302,7 +302,7 @@ class VM
 		$data_headers = Matrix::remove_empty($data_headers);
 		
 		// rows
-		$data = WebScrapper::extract_data_from_dom($dom, 'body > table > tbody > tr:not(:nth-last-child(-n+7)) > td > table > tbody > tr:nth-child(2)', 'td.second:not(:nth-child(14))');
+		$data = WebScrapper::extract_data_from_dom($dom, 'body > table > tbody > tr:not(:nth-last-child(-n+7)) > td > table > tbody > tr:nth-child(2)', 'td.second:not(:has(> span))');
 		$data = Matrix::remove_empty($data);
 		$data = Matrix::pack($data);
 		$data = Matrix::parse_values($data, ["string", "int", "int", "int", "int", "int", "int", "int", "int", "int", "string"]);
