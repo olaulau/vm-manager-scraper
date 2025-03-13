@@ -216,31 +216,38 @@ class VM
 			$coach ["name"] = $element->textContent;
 			
 			$node = $node_array [2]; /** @var HTMLElement $node */
-			$element = $node->querySelector("tr > td > table > tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr:nth-child(1) > td:nth-child(3)");
+			$node_list = $node->querySelectorAll("tr > td > table > tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr");
+			
+			$node = $node_list->item(0);
+			$element = $node->querySelector("tr > td:nth-child(3)");
 			$coach ["Entraînement physique"] = WebScrapper::parse_value($element->textContent, "int");
 			
-			$element = $node->querySelector("tr > td > table > tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr:nth-child(1) > td:nth-child(6)");
+			$element = $node->querySelector("tr:nth-child(1) > td:nth-child(6)");
 			$coach ["Travail avec les juniors"] = WebScrapper::parse_value($element->textContent, "int");
 			
-			$element = $node->querySelector("tr > td > table > tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr:nth-child(2) > td:nth-child(2)");
+			$node = $node_list->item(1);
+			$element = $node->querySelector("tr > td:nth-child(2)");
 			$coach ["Entraînement technique"] = WebScrapper::parse_value($element->textContent, "int");
 			
-			$element = $node->querySelector("tr > td > table > tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr:nth-child(2) > td:nth-child(5)");
+			$element = $node->querySelector("tr > td:nth-child(5)");
 			$coach ["Adaptabilité"] = WebScrapper::parse_value($element->textContent, "int");
 			
-			$element = $node->querySelector("tr > td > table > tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr:nth-child(3) > td:nth-child(2)");
+			$node = $node_list->item(2);
+			$element = $node->querySelector("tr > td:nth-child(2)");
 			$coach ["Psychologie"] = WebScrapper::parse_value($element->textContent, "int");
 			
-			$element = $node->querySelector("tr > td > table > tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr:nth-child(3) > td:nth-child(5)");
+			$element = $node->querySelector("tr > td:nth-child(5)");
 			$coach ["Niveau de discipline"] = WebScrapper::parse_value($element->textContent, "int");
 			
-			$element = $node->querySelector("tr > td > table > tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr:nth-child(4) > td:nth-child(2)");
+			$node = $node_list->item(3);
+			$element = $node->querySelector("tr > td:nth-child(2)");
 			$coach ["Motivation"] = WebScrapper::parse_value($element->textContent, "int");
 			
-			$element = $node->querySelector("tr > td > table > tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr:nth-child(5) > td:nth-child(1)");
+			$node = $node_list->item(4);
+			$element = $node->querySelector("tr > td:nth-child(1)");
 			$coach ["age"] = WebScrapper::parse_value($element->textContent, "int");
 			
-			$element = $node->querySelector("tr > td > table > tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr:nth-child(5) > td:nth-child(2)");
+			$element = $node->querySelector("tr > td:nth-child(2)");
 			$coach ["salaire"] = WebScrapper::parse_value($element->textContent, "int");
 			
 			$coaches [] = $coach;
