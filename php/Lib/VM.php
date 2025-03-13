@@ -2,6 +2,8 @@
 namespace Lib;
 
 use Cache;
+use Dom\HTMLElement;
+use Dom\Node;
 use ErrorException;
 
 
@@ -70,7 +72,7 @@ class VM
 		$data = WebScrapper::extract_data_from_dom($dom, 'body > table:nth-child(2) > tbody > tr > td > table > tbody > tr:nth-child(2)', 'td.second');
 		$data = Matrix::remove_empty_columns($data);
 		$data = Matrix::pack($data);
-		$data = Matrix::format_values($data, ["string", "string", "int", "int", "int", "int", "int", "int"]);
+		$data = Matrix::parse_values($data, ["string", "string", "int", "int", "int", "int", "int", "int"]);
 
 		return array_merge($data_headers, $data);
 	}
@@ -106,7 +108,7 @@ class VM
 		$data = WebScrapper::extract_data_from_dom($dom, 'body > form#postform > table > tbody > tr > td > table > tbody > tr:nth-child(2)', 'td.second:not(:nth-child(3)):not(:nth-child(6))');
 		$data = Matrix::remove_empty_columns($data);
 		$data = Matrix::pack($data);
-		$data = Matrix::format_values($data, ["string", "int", "int", "int", "int", "string", "string", "string"]);
+		$data = Matrix::parse_values($data, ["string", "int", "int", "int", "int", "string", "string", "string"]);
 
 		return array_merge($data_headers, $data);
 	}
@@ -130,15 +132,9 @@ class VM
 		// decode JSON
 		$decoded = json_decode($raw_content, true);
 		$html = $decoded ["body"];
-		// echo $html; die;
 
 		// browse HTML v5
 		$dom = \Dom\HTMLDocument::createFromString($html, LIBXML_NOERROR);
-		// display dom as HTML tree
-		/*
-		WebScrapper::display_html_tree($dom);
-		die;
-		*/
 		
 		// headers
 		$data_headers = WebScrapper::extract_data_from_dom($dom, 'body > table:nth-child(2) > tbody > tr > td > table > tbody > tr:nth-child(2)', 'td.fourth');
@@ -149,11 +145,11 @@ class VM
 		$data = WebScrapper::extract_data_from_dom($dom, 'body > table:nth-child(2) > tbody > tr:not(:nth-last-child(2)) > td > table > tbody > tr:nth-child(2)', 'td.second:not(:nth-child(2)):not(:nth-child(3))');
 		$data = Matrix::remove_empty_columns($data);
 		$data = Matrix::pack($data);
-		$data = Matrix::format_values($data, ["DateTime", "string", "string", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", ]);
-
+		$data = Matrix::parse_values($data, ["DateTime", "string", "string", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int", ]);
 
 		return array_merge($data_headers, $data);
 	}
+	
 	
 	public function get_transfert_data_pages (int $nb_pages=1, int $start_offset=1)
 	{
@@ -175,6 +171,85 @@ class VM
 		while ($cpt <= $nb_pages);
 		$res = array_merge([$headers], $res);
 		return $res;
+	}
+	
+	
+	public function get_coaches_data () : array
+	{
+		$url = "https://vm-manager.org/Ajax_handler.php?phpsite=view_body.php&action=Coaches";
+		$query = $this->wt->createQuery($url);
+		$raw_content = $query->send();
+		
+		// clean JSON
+		$raw_content = WebScrapper::clean_dirty_json($raw_content);
+		
+		// validate JSON
+		$valid = json_validate($raw_content);
+		if($valid === false) {
+			throw new ErrorException(json_last_error() . " : " . json_last_error_msg());
+		}
+		
+		// decode JSON
+		$decoded = json_decode($raw_content, true);
+		$html = $decoded ["body"];
+		// echo $html; die;
+
+		// browse HTML v5
+		$dom = \Dom\HTMLDocument::createFromString($html, LIBXML_NOERROR);
+		// display dom as HTML tree
+		// WebScrapper::display_html_tree($dom);
+		// die;
+		
+		$node_list = $dom->querySelectorAll("body > table:nth-child(1) > tbody > tr");
+		$nodes_array = iterator_to_array($node_list);
+		$nodes_splited = array_chunk ($nodes_array, 7);
+		
+		$coaches = [];
+		foreach ($nodes_splited as $node_array) {
+			$coach = [];
+			
+			$node = $node_array [0]; /** @var HTMLElement $node */
+			$element = $node->querySelector("tr > td > table > tbody > tr:nth-child(2) > td:nth-child(3) > b > span");
+			$coach ["type"] = $element->textContent;
+			
+			$element = $node->querySelector("tr > td > table > tbody > tr:nth-child(2) > td:nth-child(4) > b > span > b");
+			$coach ["name"] = $element->textContent;
+			
+			$node = $node_array [2]; /** @var HTMLElement $node */
+			$element = $node->querySelector("tr > td > table > tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr:nth-child(1) > td:nth-child(3)");
+			$coach ["Entraînement physique"] = WebScrapper::parse_value($element->textContent, "int");
+			
+			$element = $node->querySelector("tr > td > table > tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr:nth-child(1) > td:nth-child(6)");
+			$coach ["Travail avec les juniors"] = WebScrapper::parse_value($element->textContent, "int");
+			
+			$element = $node->querySelector("tr > td > table > tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr:nth-child(2) > td:nth-child(2)");
+			$coach ["Entraînement technique"] = WebScrapper::parse_value($element->textContent, "int");
+			
+			$element = $node->querySelector("tr > td > table > tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr:nth-child(2) > td:nth-child(5)");
+			$coach ["Adaptabilité"] = WebScrapper::parse_value($element->textContent, "int");
+			
+			$element = $node->querySelector("tr > td > table > tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr:nth-child(3) > td:nth-child(2)");
+			$coach ["Psychologie"] = WebScrapper::parse_value($element->textContent, "int");
+			
+			$element = $node->querySelector("tr > td > table > tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr:nth-child(3) > td:nth-child(5)");
+			$coach ["Niveau de discipline"] = WebScrapper::parse_value($element->textContent, "int");
+			
+			$element = $node->querySelector("tr > td > table > tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr:nth-child(4) > td:nth-child(2)");
+			$coach ["Motivation"] = WebScrapper::parse_value($element->textContent, "int");
+			
+			$element = $node->querySelector("tr > td > table > tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr:nth-child(5) > td:nth-child(1)");
+			$coach ["age"] = WebScrapper::parse_value($element->textContent, "int");
+			
+			$element = $node->querySelector("tr > td > table > tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr:nth-child(5) > td:nth-child(2)");
+			$coach ["salaire"] = WebScrapper::parse_value($element->textContent, "int");
+			
+			$coaches [] = $coach;
+		}
+		
+		$headers = array_keys ($coaches [0]);
+		$coaches = Matrix::pack($coaches);
+		$data = array_merge([$headers], $coaches);
+		return array_merge([$headers], $coaches);
 	}
 	
 }

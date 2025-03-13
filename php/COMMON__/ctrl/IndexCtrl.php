@@ -1,6 +1,7 @@
 <?php
 namespace COMMON__\ctrl;
 
+use Base;
 use ErrorException;
 use Lib\Matrix;
 use Lib\VM;
@@ -27,7 +28,7 @@ class IndexCtrl extends Ctrl
 		return $res;
 	}
 	
-	public static function indexGET (\Base $f3, $url, $controler)
+	public static function indexGET (Base $f3, array $url, string $controler)
 	{
 		$page = [
 			"module"	=>	"COMMON__",
@@ -41,10 +42,10 @@ class IndexCtrl extends Ctrl
 	}
 	
 	
-	public static function testGET (\Base $f3, $url, $controler)
+	public static function testGET (Base $f3, array $url, string $controler)
 	{
 		// load FFF
-		$f3 = \Base::instance();
+		$f3 = Base::instance();
 		$f3->config('conf/index.ini');
 		
 		// prepare talk
@@ -67,10 +68,10 @@ class IndexCtrl extends Ctrl
 	}
 	
 	
-	public static function teamGET (\Base $f3, $url, $controler)
+	public static function teamGET (Base $f3, array $url, string $controler)
 	{
 		// load FFF
-		$f3 = \Base::instance();
+		$f3 = Base::instance();
 		$f3->config('conf/index.ini');
 		
 		// prepare talk
@@ -98,10 +99,10 @@ class IndexCtrl extends Ctrl
 	}
 	
 	
-	public static function leagueGET (\Base $f3, $url, $controler)
+	public static function leagueGET (Base $f3, array $url, string $controler)
 	{
 		// load FFF
-		$f3 = \Base::instance();
+		$f3 = Base::instance();
 		$f3->config('conf/index.ini');
 		
 		// prepare talk
@@ -128,10 +129,10 @@ class IndexCtrl extends Ctrl
 	}
 	
 	
-	public static function transfertsGET (\Base $f3, $url, $controler)
+	public static function transfertsGET (Base $f3, array $url, string $controler)
 	{
 		// load FFF
-		$f3 = \Base::instance();
+		$f3 = Base::instance();
 		$f3->config('conf/index.ini');
 		
 		// prepare talk
@@ -150,6 +151,36 @@ class IndexCtrl extends Ctrl
 		<?php
 		$transferts_data = $vm->get_transfert_data_pages(4);
 		Matrix::display_html_table ($transferts_data);
+		
+		// display talk stats
+		echo "<hr> {$vm->wt->queries_count} quer" . ($vm->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vm->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
+		
+		die;
+	}
+	
+	
+	public static function coachesGET (Base $f3, array $url, string $controler)
+	{
+		// load FFF
+		$f3 = Base::instance();
+		$f3->config('conf/index.ini');
+		
+		// prepare talk
+		$conf = $f3->get("conf");
+		$vm = new VM ();
+		
+		// auth
+		$auth_res = $vm->authenticate ($conf ["auth"] ["login"], $conf ["auth"] ["pass"]);
+		if($auth_res !== true) {
+			throw new ErrorException("authentication failed");
+		}
+		
+		// get coaches data
+		?>
+		<h2>coaches</h2>
+		<?php
+		$coaches_data = $vm->get_coaches_data();
+		Matrix::display_html_table ($coaches_data);
 		
 		// display talk stats
 		echo "<hr> {$vm->wt->queries_count} quer" . ($vm->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vm->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;

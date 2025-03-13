@@ -21,9 +21,9 @@ PoC
 
 
 
-club -> staff technique => coaches
--> changer
-filtrer les coatches avec des caractéristiques supérieures
+club -> staff technique => coaches (https://vm-manager.org/Ajax_handler.php?phpsite=view_body.php&action=Coaches)
+-> changer (https://vm-manager.org/Ajax_handler.php?phpsite=view_body.php&action=CoachChange&coachId=389566&site=2)
+filtrer les coaches avec des caractéristiques supérieures
 trier par prix
 mettre des filtres pour toutes les colonnes
 
