@@ -3,8 +3,6 @@ namespace Lib;
 
 use Cache;
 use Dom\HTMLElement;
-use Dom\Node;
-use Error;
 use ErrorException;
 
 
@@ -16,10 +14,11 @@ class VM
 	
 	public function authenticate (string $login, string $password) : bool
 	{
-		$cache = Cache::instance();
-		$cache_key = "Login_{$login}_{$password}";
+		$hashed_password = hash("sha256", $password);
+		$cache_key = "Login_{$login}_{$hashed_password}";
 		
 		// check if we don't have cookies in cache, to avoid remote auth
+		$cache = Cache::instance();
 		$cookies = $cache->get ($cache_key);
 		if (!empty ($cookies)) {
 			$this->wt->cookie_headers = $cookies;

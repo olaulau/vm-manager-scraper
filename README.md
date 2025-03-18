@@ -19,13 +19,15 @@ PoC
 - get auth credential from an auth form (instead of static config)
 - store data into a cache (or sqlite, mysql) ?
 
+- put http query in cache
+- execute rest of code as if
+- store final data into a in-memory DB (sqlite, mariadb ?) each execution
 
 
-club -> staff technique => coaches (https://vm-manager.org/Ajax_handler.php?phpsite=view_body.php&action=Coaches)
--> changer (https://vm-manager.org/Ajax_handler.php?phpsite=view_body.php&action=CoachChange&coachId=389566&site=2)
-filtrer les coaches avec des caractéristiques supérieures
-trier par prix
-mettre des filtres pour toutes les colonnes
+changement coach :
+- filtrer les coaches avec des caractéristiques supérieures
+- trier par prix
+- mettre des filtres pour toutes les colonnes
 
 équipe -> nom du joueur
 	-> attributs offensif
