@@ -68,7 +68,7 @@ abstract class WebScrapper
 				$val = intval($val);
 				break;
 			case "DateTime" :
-				$val = DateTime::createFromFormat("d.m h:i", $val);
+				$val = DateTime::createFromFormat("d.m H:i", $val);
 				break;
 			case "string" :
 			default :
