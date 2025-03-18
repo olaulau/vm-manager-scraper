@@ -12,17 +12,19 @@ class VM
 	function __construct (public WebsiteTalk $wt = new WebsiteTalk ()) {}
 	
 	
-	public function authenticate (string $login, string $password) : bool
+	public function authenticate (string $login, string $password, bool $force=false) : bool
 	{
 		$hashed_password = hash("sha256", $password);
 		$cache_key = "Login_{$login}_{$hashed_password}";
 		
 		// check if we don't have cookies in cache, to avoid remote auth
 		$cache = Cache::instance();
-		$cookies = $cache->get ($cache_key);
-		if (!empty ($cookies)) {
-			$this->wt->cookie_headers = $cookies;
-			return true;
+		if($force === false) {
+			$cookies = $cache->get ($cache_key);
+			if (!empty ($cookies)) {
+				$this->wt->cookie_headers = $cookies;
+				return true;
+			}
 		}
 		
 		$url = "http://vm-manager.org/index.php?view=Login";

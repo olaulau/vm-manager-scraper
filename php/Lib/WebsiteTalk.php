@@ -5,9 +5,11 @@ namespace Lib;
 class WebsiteTalk
 {
 	
-	public array $cookie_headers=[];
 	public int $queries_count = 0;
 	public float $queries_duration = 0;
+	
+	
+	function __construct (public array $cookie_headers = []) {}
 	
 	
 	public function createQuery (string $url, array $post_fields=[]) : WebQuery
