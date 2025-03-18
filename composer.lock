@@ -431,12 +431,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/olaulau/HtmlSkel.git",
-                "reference": "a1e8b40a02c1393cea5777d5b7be2068c30aab68"
+                "reference": "8119216414ff2caecc4be1599acf7c1a2e555521"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/olaulau/HtmlSkel/zipball/a1e8b40a02c1393cea5777d5b7be2068c30aab68",
-                "reference": "a1e8b40a02c1393cea5777d5b7be2068c30aab68",
+                "url": "https://api.github.com/repos/olaulau/HtmlSkel/zipball/8119216414ff2caecc4be1599acf7c1a2e555521",
+                "reference": "8119216414ff2caecc4be1599acf7c1a2e555521",
                 "shasum": ""
             },
             "require": {
@@ -456,7 +456,7 @@
                 "source": "https://github.com/olaulau/HtmlSkel/tree/master",
                 "issues": "https://github.com/olaulau/HtmlSkel/issues"
             },
-            "time": "2024-01-09T16:02:10+00:00"
+            "time": "2025-03-18T11:53:34+00:00"
         },
         {
             "name": "select2/select2",

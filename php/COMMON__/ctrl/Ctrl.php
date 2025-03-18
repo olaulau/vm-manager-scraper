@@ -45,8 +45,7 @@ abstract class Ctrl
 		
 		// CSRF
 		$f3->CSRF = $f3->get("SESSION.CSRF");
-		if(empty($f3->CSRF))
-		{
+		if(empty($f3->CSRF)) {
 			CSRF::newToken();
 		}
 		
