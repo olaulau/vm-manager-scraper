@@ -50,6 +50,7 @@ class AuthCtrl extends Ctrl
 		$vmc = new VmCached(new WebsiteTalk());
 		$res = $vmc->authenticate($login, $password);
 		if($res === false) {
+			sleep(3);
 			$f3->clear("SESSION.user");
 			$f3->reroute(["login"]);
 		}
