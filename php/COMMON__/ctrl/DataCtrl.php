@@ -5,6 +5,7 @@ use Base;
 use ErrorException;
 use Lib\Matrix;
 use Lib\VmCached;
+use Lib\VmScraper;
 
 
 class DataCtrl extends PrivateCtrl
@@ -53,13 +54,13 @@ class DataCtrl extends PrivateCtrl
 		?>
 		<h2>team</h2>
 		<?php
-		$vmc = new VmCached (VmCached::auth_from_session());
-		$data = $vmc->get_team_data ();
+		$vms = new VmScraper (VmCached::auth_from_session());
+		$data = $vms->get_team_data ();
 		Matrix::display_html_table ($data);
 		// Matrix::send_csv_table ($data);
 		
 		// display talk stats
-		echo "<hr> {$vmc->vms->wt->queries_count} quer" . ($vmc->vms->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vmc->vms->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
+		echo "<hr> {$vms->wt->queries_count} quer" . ($vms->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vms->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
 		die;
 	}
 	
@@ -74,12 +75,12 @@ class DataCtrl extends PrivateCtrl
 		?>
 		<h2>league</h2>
 		<?php
-		$vmc = new VmCached (VmCached::auth_from_session());
-		$league_data = $vmc->get_league_data ();
+		$vms = new VmScraper (VmCached::auth_from_session());
+		$league_data = $vms->get_league_data ();
 		Matrix::display_html_table ($league_data);
 		
 		// display talk stats
-		echo "<hr> {$vmc->vms->wt->queries_count} quer" . ($vmc->vms->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vmc->vms->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
+		echo "<hr> {$vms->wt->queries_count} quer" . ($vms->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vms->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
 		die;
 	}
 	
@@ -94,12 +95,12 @@ class DataCtrl extends PrivateCtrl
 		?>
 		<h2>transferts</h2>
 		<?php
-		$vmc = new VmCached (VmCached::auth_from_session());
-		$transferts_data = $vmc->get_transfert_data_pages(4);
+		$vms = new VmScraper (VmCached::auth_from_session());
+		$transferts_data = $vms->get_transfert_data_pages(4);
 		Matrix::display_html_table ($transferts_data);
 		
 		// display talk stats
-		echo "<hr> {$vmc->vms->wt->queries_count} quer" . ($vmc->vms->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vmc->vms->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
+		echo "<hr> {$vms->wt->queries_count} quer" . ($vms->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vms->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
 		die;
 	}
 	
@@ -115,8 +116,8 @@ class DataCtrl extends PrivateCtrl
 		?>
 		<h2>coaches</h2>
 		<?php
-		$vmc = new VmCached (VmCached::auth_from_session());
-		$coaches_data = $vmc->get_coaches_data();
+		$vms = new VmScraper (VmCached::auth_from_session());
+		$coaches_data = $vms->get_coaches_data();
 		Matrix::display_html_table ($coaches_data);
 		
 		array_shift($coaches_data); // remove headers
@@ -127,7 +128,7 @@ class DataCtrl extends PrivateCtrl
 		}
 		
 		// display talk stats
-		echo "<hr> {$vmc->vms->wt->queries_count} quer" . ($vmc->vms->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vmc->vms->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
+		echo "<hr> {$vms->wt->queries_count} quer" . ($vms->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vms->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
 		die;
 	}
 	
@@ -148,12 +149,12 @@ class DataCtrl extends PrivateCtrl
 		?>
 		<h2>coach change (<?= $coach_id ?>)</h2>
 		<?php
-		$vmc = new VmCached (VmCached::auth_from_session());
-		$coach_change_data = $vmc->get_coach_change_data_pages($coach_id, 4);
+		$vms = new VmScraper (VmCached::auth_from_session());
+		$coach_change_data = $vms->get_coach_change_data_pages($coach_id, 4);
 		Matrix::display_html_table ($coach_change_data);
 		
 		// display talk stats
-		echo "<hr> {$vmc->vms->wt->queries_count} quer" . ($vmc->vms->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vmc->vms->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
+		echo "<hr> {$vms->wt->queries_count} quer" . ($vms->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vms->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
 		die;
 	}
 	

@@ -40,5 +40,4 @@ la taille fait un bonus / malus sur les caractéristiques attaques défense (cf.
 
 
 coach change : manque les ID
-VM : mettre en cache les requêtes brutes por pouvoir modifier le code de transformation des données
 - login : throttling

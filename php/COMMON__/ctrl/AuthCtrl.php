@@ -4,6 +4,7 @@ namespace COMMON__\ctrl;
 use Base;
 use Lib\VmScraper;
 use Lib\VmCached;
+use Lib\WebsiteTalk;
 
 class AuthCtrl extends Ctrl
 {
@@ -46,7 +47,7 @@ class AuthCtrl extends Ctrl
 		$login = $f3->get("POST.login");
 		$password = $f3->get("POST.password");
 		
-		$vmc = new VmCached();
+		$vmc = new VmCached(new WebsiteTalk());
 		$res = $vmc->authenticate($login, $password);
 		if($res === false) {
 			$f3->clear("SESSION.user");

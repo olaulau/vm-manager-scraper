@@ -9,9 +9,6 @@ use ErrorException;
 class VmCached
 {
 	
-	public VmScraper $vms;
-	
-	
 	public static function auth_from_session () : ?WebsiteTalk
 	{
 		$f3 = Base::instance();
@@ -37,15 +34,15 @@ class VmCached
 	}
 	
 	
-	function __construct (?WebsiteTalk $wt=null) {
-		if(empty($wt)) {
-			$wt = new WebsiteTalk();
+	function __construct (public ?WebsiteTalk $wt)
+	{
+		if (empty($this->wt)) {
+			$this->wt = self::auth_from_session();
 		}
-		$this->vms = new VmScraper ($wt);
 	}
 	
 	
-	public function authenticate (string $login, string $password) : bool
+	public function authenticate (string $login, string $password) : ?array
 	{
 		$hashed_password = hash("sha256", $password);
 		$cache_key = "Login_{$login}_{$hashed_password}";
@@ -53,25 +50,22 @@ class VmCached
 		
 		// check if we don't have cookies in cache, to avoid remote auth
 		$cache = Cache::instance();
-		$cookies = $cache->get ($cache_key);
-		if (!empty ($cookies)) {
-			return true;
+		$data = $cache->get ($cache_key);
+		if (!empty ($data)) {
+			return $data;
 		}
 		else {
-			$vmq = new VmQuery(self::auth_from_session());
+			$vmq = new VmQuery($this->wt);
 			$data = $vmq->authenticate ($login, $password);
 			if(!empty($data)) {
 				$cache->set ($cache_key, $data, $cache_duration);
-				return true;
 			}
-			else {
-				return false;
-			}
+			return $data;
 		}
 	}
 	
 	
-	public function get_team_data () : array
+	public function get_team_data () : string
 	{
 		$f3 = Base::instance();
 		
@@ -86,14 +80,15 @@ class VmCached
 			return $data;
 		}
 		else {
-			$data = $this->vms->get_team_data ();
+			$vmq = new VmQuery($this->wt);
+			$data = $vmq->get_team_data ();
 			$cache->set ($cache_key, $data, $cache_duration);
 			return $data;
 		}
 	}
 	
 	
-	public function get_league_data () : array
+	public function get_league_data () : string
 	{
 		$f3 = Base::instance();
 		
@@ -108,14 +103,15 @@ class VmCached
 			return $data;
 		}
 		else {
-			$data = $this->vms->get_league_data ();
+			$vmq = new VmQuery($this->wt);
+			$data = $vmq->get_league_data ();
 			$cache->set ($cache_key, $data, $cache_duration);
 			return $data;
 		}
 	}
 	
 	
-	public function get_transfert_data (int $num_page=1) : array
+	public function get_transfert_data (int $num_page=1) : string
 	{
 		$f3 = Base::instance();
 		
@@ -130,38 +126,15 @@ class VmCached
 			return $data;
 		}
 		else {
-			$data = $this->vms->get_transfert_data ($num_page);
+			$vmq = new VmQuery($this->wt);
+			$data = $vmq->get_transfert_data ($num_page);
 			$cache->set ($cache_key, $data, $cache_duration);
 			return $data;
 		}
 	}
 	
 	
-	public function get_transfert_data_pages (int $nb_pages=1, int $start_offset=1)
-	{
-		if ($nb_pages < 1 || $start_offset < 1) {
-			throw new ErrorException("parameter problem");
-		}
-		
-		$res = [];
-		$page_num = $start_offset;
-		$cpt = 1;
-		do {
-			$data = $this->get_transfert_data ($page_num);
-			$headers = array_shift($data);
-			
-			$res = array_merge($res, $data);
-			$cpt ++;
-			$page_num ++;
-		}
-		while ($cpt <= $nb_pages);
-		
-		$res = array_merge([$headers], $res);
-		return $res;
-	}
-	
-	
-	public function get_coaches_data () : array
+	public function get_coaches_data () : string
 	{
 		$f3 = Base::instance();
 		
@@ -176,14 +149,15 @@ class VmCached
 			return $data;
 		}
 		else {
-			$data = $this->vms->get_coaches_data ();
+			$vmq = new VmQuery($this->wt);
+			$data = $vmq->get_coaches_data ();
 			$cache->set ($cache_key, $data, $cache_duration);
 			return $data;
 		}
 	}
 	
 	
-	public function get_coach_change_data (int $coach_id, int $num_page=1) : array
+	public function get_coach_change_data (int $coach_id, int $num_page=1) : string
 	{
 		$f3 = Base::instance();
 		
@@ -198,34 +172,11 @@ class VmCached
 			return $data;
 		}
 		else {
-			$data = $this->vms->get_coach_change_data ($coach_id, $num_page);
+			$vmq = new VmQuery($this->wt);
+			$data = $vmq->get_coach_change_data ($coach_id, $num_page);
 			$cache->set ($cache_key, $data, $cache_duration);
 			return $data;
 		}
-	}
-	
-	
-	public function get_coach_change_data_pages (int $coach_id, int $nb_pages=1, int $start_offset=1)
-	{
-		if ($nb_pages < 1 || $start_offset < 1) {
-			throw new ErrorException("parameter problem");
-		}
-		
-		$res = [];
-		$page_num = $start_offset;
-		$cpt = 1;
-		do {
-			$data = $this->get_coach_change_data ($coach_id, $page_num);
-			$headers = array_shift($data);
-			
-			$res = array_merge($res, $data);
-			$cpt ++;
-			$page_num ++;
-		}
-		while ($cpt <= $nb_pages);
-		
-		$res = array_merge([$headers], $res);
-		return $res;
 	}
 	
 }
