@@ -141,32 +141,6 @@ class VM
 		return array_merge($data_headers, $data);
 	}
 	
-	/**
-	 * @deprecated
-	 */
-	public function get_transfert_data_pages (int $nb_pages=1, int $start_offset=1)
-	{
-		if ($nb_pages < 1 || $start_offset < 1) {
-			throw new ErrorException("parameter problem");
-		}
-		
-		$res = [];
-		$page_num = $start_offset;
-		$cpt = 1;
-		do {
-			$data = $this->get_transfert_data ($page_num);
-			$headers = array_shift($data);
-			
-			$res = array_merge($res, $data);
-			$cpt ++;
-			$page_num ++;
-		}
-		while ($cpt <= $nb_pages);
-		
-		$res = array_merge([$headers], $res);
-		return $res;
-	}
-	
 	
 	public function get_coaches_data () : array
 	{
@@ -300,32 +274,6 @@ class VM
 		$data = Matrix::parse_values($data, ["string", "int", "int", "int", "int", "int", "int", "int", "int", "int", "string"]);
 
 		return array_merge($data_headers, $data);
-	}
-	
-	/**
-	 * @deprecated
-	 */
-	public function get_coach_change_data_pages (int $coach_id, int $nb_pages=1, int $start_offset=1)
-	{
-		if ($nb_pages < 1 || $start_offset < 1) {
-			throw new ErrorException("parameter problem");
-		}
-		
-		$res = [];
-		$page_num = $start_offset;
-		$cpt = 1;
-		do {
-			$data = $this->get_coach_change_data ($coach_id, $page_num);
-			$headers = array_shift($data);
-			
-			$res = array_merge($res, $data);
-			$cpt ++;
-			$page_num ++;
-		}
-		while ($cpt <= $nb_pages);
-		
-		$res = array_merge([$headers], $res);
-		return $res;
 	}
 	
 }

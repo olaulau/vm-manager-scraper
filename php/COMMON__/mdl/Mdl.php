@@ -2,9 +2,12 @@
 namespace COMMON__\mdl;
 
 use Base;
+use DB\Cortex;
+use DB\CortexCollection;
 use ErrorException;
 
-abstract class Mdl extends \DB\Cortex
+
+abstract class Mdl extends Cortex
 {
 	
 	const TABLE_NAME = null; // each subclass must fill-in this var
@@ -30,7 +33,7 @@ abstract class Mdl extends \DB\Cortex
 	}
 	
 	
-	// this method can lead to fatal error when the data is not foud, combining F3 with cortex ORM
+	// this method can lead to fatal error when the data is not found, combining F3 with cortex ORM
 	public function findone ($filter = null, ?array $options = null, $ttl = 0)
 	{
 		throw new \ErrorException("findone() method shoud not be used (class : " . get_called_class() . ")");
@@ -40,14 +43,14 @@ abstract class Mdl extends \DB\Cortex
 	function __construct ()
 	{
 		$f3 = \Base::instance();
-		$db = $f3->get("db"); /* @var $db \DB\SQL */
+		$db = $f3->get("db"); /** @var $db \DB\SQL */
 		parent::__construct($db, static::TABLE_NAME);
 	}
 	
 	
-	public function find($filter = NULL, array $options = NULL, $ttl = 0) : \DB\CortexCollection
+	public function find ($filter = NULL, array $options = NULL, $ttl = 0) : CortexCollection
 	{
-		$res = parent::find($filter, $options, $ttl);
+		$res = parent::find($filter, $options, $ttl); /** @var CortexCollection $res */
 		if(empty($res)) {
 			return new \DB\CortexCollection();
 		}
@@ -58,12 +61,12 @@ abstract class Mdl extends \DB\Cortex
 	
 	
 	
-	public static function findBy($key, $value)
+	public static function findBy ($key, $value)
 	{
 		$entity = new static();
 		
 		$f3 = \Base::instance();
-		$db = $f3->get("db"); /** @var \DB\SQL $db DataBase */
+		$db = $f3->get("db"); /** @var \DB\SQL $db */
 		
 		// check $key is valid to avoid SQL injection
 		$table = $entity->getTable();
@@ -90,26 +93,22 @@ abstract class Mdl extends \DB\Cortex
 	}
 	
 	
-	public static function getAll ($order_field=null) : \DB\CortexCollection
+	public static function getAll ($order_field=null) : CortexCollection
 	{
-		$entity = new static(); /* var $entity \DB\Cortex */
+		$entity = new static(); /** @var \DB\Cortex $entity */
 		$order_field = $order_field ?? "name";
 		// if the entity has a property "name", order results with it
-		if(in_array($order_field, $entity->fields()))
-		{
+		if(in_array($order_field, $entity->fields())) {
 			$res = $entity->find("", ["order" => "$order_field ASC"]);
 		}
-		else
-		{
+		else {
 			$res = $entity->find();
 		}
 		
-		if(empty($res))
-		{
-			return new \DB\CortexCollection();
+		if(empty($res)) {
+			return new CortexCollection();
 		}
-		else
-		{
+		else {
 			return $res;
 		}
 	}
@@ -117,11 +116,10 @@ abstract class Mdl extends \DB\Cortex
 	/**
 	 *	key -> object
 	 */
-	public static function objectsIndexed (\DB\CortexCollection $objects, $key="id")
+	public static function objectsIndexed (CortexCollection $objects, $key="id")
 	{
 		$values = [];
-		foreach ($objects as $row)
-		{
+		foreach ($objects as $row) {
 			$values [$row->$key] = $row;
 		}
 		
@@ -132,11 +130,10 @@ abstract class Mdl extends \DB\Cortex
 	/**
 	 * id -> name
 	 */
-	public static function objectsAsList (\DB\CortexCollection $objects) : array
+	public static function objectsAsList (CortexCollection $objects) : array
 	{
 		$res = [];
-		foreach ($objects as $row)
-		{
+		foreach ($objects as $row) {
 			$res [$row->id] = $row->__toString();
 		}
 		return $res;
@@ -161,8 +158,7 @@ abstract class Mdl extends \DB\Cortex
 	public static function objectsAsAjaxList (\DB\CortexCollection $objects) : array
 	{
 		$res = [];
-		foreach ($objects as $row)
-		{
+		foreach ($objects as $row) {
 			$res [] = [
 				"value" => $row->id,
 				"label" => $row->__toString(),
@@ -186,12 +182,10 @@ abstract class Mdl extends \DB\Cortex
 		$db = $f3->get("db"); /* @var $db \DB\SQL */
 		
 		$db->begin();
-		try
-		{
+		try {
 			$this->erase();
 		}
-		catch(\Exception $ex)
-		{
+		catch(\Exception $ex) {
 			return false;
 		}
 		
@@ -203,24 +197,20 @@ abstract class Mdl extends \DB\Cortex
 	public function tryErase ()
 	{
 		$f3 = \Base::instance();
-		$db = $f3->get("db"); /* @var $db \DB\SQL */
+		$db = $f3->get("db"); /** @var \DB\SQL $db */
 		
 		$db->begin();
-		try
-		{
+		try {
 			$this->erase();
 		}
-		catch(\Exception $e)
-		{
+		catch(\Exception $e) {
 			$db->rollback();
 			$class = get_class($e);
 			$code = $e->getCode();
-			if($class === "PDOException" && $code === "23000")
-			{
+			if($class === "PDOException" && $code === "23000") {
 				$error_message = "La donnée ne peut être supprimée, probablement car elle est utilisée ailleurs.";
 			}
-			else
-			{
+			else {
 				$error_message = $class . " : " . $code . " : " . $e->getMessage();
 			}
 			throw new \ErrorException($error_message);
