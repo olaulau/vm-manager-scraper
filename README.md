@@ -15,6 +15,13 @@ PoC
 - Fat Free Framework
 
 
+# install
+- git clone
+- composer i
+- npm i
+- fill in config file
+
+
 # TODO
 - get auth credential from an auth form (instead of static config)
 - store data into a cache (or sqlite, mysql) ?

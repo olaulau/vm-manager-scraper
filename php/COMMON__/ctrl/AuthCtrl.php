@@ -46,7 +46,8 @@ class AuthCtrl extends Ctrl
 		$login = $f3->get("POST.login");
 		$password = $f3->get("POST.password");
 		
-		$res = VmCached::authenticate($login, $password);
+		$vmc = new VmCached();
+		$res = $vmc->authenticate($login, $password);
 		if($res === false) {
 			$f3->clear("SESSION.user");
 			$f3->reroute(["login"]);
