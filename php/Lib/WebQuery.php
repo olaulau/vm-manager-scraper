@@ -15,7 +15,7 @@ class WebQuery
 	public function __construct (public string $url, public array $post_fields, public WebsiteTalk $wt = new WebsiteTalk()) {}
 	
 	
-	public function send () : bool|string //TODO return void, use $this->response_body instead
+	public function send () : void
 	{
 		$ch = curl_init();
 
@@ -58,8 +58,6 @@ class WebQuery
 		// update talk stats
 		$this->wt->queries_count ++;
 		$this->wt->queries_duration += $this->response_infos ["total_time"];
-		
-		return $this->response_body;
 	}
 	
 }

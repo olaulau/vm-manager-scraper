@@ -2,7 +2,7 @@
 namespace COMMON__\ctrl;
 
 use Base;
-use Lib\VM;
+use Lib\VmScraper;
 use Lib\VmCached;
 
 class AuthCtrl extends Ctrl

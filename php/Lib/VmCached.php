@@ -9,7 +9,10 @@ use ErrorException;
 class VmCached
 {
 	
-	public static function auth_from_session () : ?VM
+	public VmScraper $vms;
+	
+	
+	public static function auth_from_session () : ?WebsiteTalk
 	{
 		$f3 = Base::instance();
 		
@@ -26,8 +29,7 @@ class VmCached
 		$cache = Cache::instance();
 		$cookies = $cache->get ($cache_key);
 		if (!empty ($cookies)) {
-			$vm = new VM(new WebsiteTalk($cookies));
-			return $vm;
+			return new WebsiteTalk($cookies);
 		}
 		else {
 			return null;
@@ -35,10 +37,11 @@ class VmCached
 	}
 	
 	
-	function __construct (public ?VM $vm = new VM ()) {
-		if(empty($this->vm)) {
-			$this->vm = new VM ();
+	function __construct (?WebsiteTalk $wt=null) {
+		if(empty($wt)) {
+			$wt = new WebsiteTalk();
 		}
+		$this->vms = new VmScraper ($wt);
 	}
 	
 	
@@ -55,8 +58,8 @@ class VmCached
 			return true;
 		}
 		else {
-			$this->vm = new VM ();
-			$data = $this->vm->authenticate ($login, $password);
+			$vmq = new VmQuery(self::auth_from_session());
+			$data = $vmq->authenticate ($login, $password);
 			if(!empty($data)) {
 				$cache->set ($cache_key, $data, $cache_duration);
 				return true;
@@ -83,7 +86,7 @@ class VmCached
 			return $data;
 		}
 		else {
-			$data = $this->vm->get_team_data ();
+			$data = $this->vms->get_team_data ();
 			$cache->set ($cache_key, $data, $cache_duration);
 			return $data;
 		}
@@ -105,7 +108,7 @@ class VmCached
 			return $data;
 		}
 		else {
-			$data = $this->vm->get_league_data ();
+			$data = $this->vms->get_league_data ();
 			$cache->set ($cache_key, $data, $cache_duration);
 			return $data;
 		}
@@ -127,7 +130,7 @@ class VmCached
 			return $data;
 		}
 		else {
-			$data = $this->vm->get_transfert_data ($num_page);
+			$data = $this->vms->get_transfert_data ($num_page);
 			$cache->set ($cache_key, $data, $cache_duration);
 			return $data;
 		}
@@ -173,7 +176,7 @@ class VmCached
 			return $data;
 		}
 		else {
-			$data = $this->vm->get_coaches_data ();
+			$data = $this->vms->get_coaches_data ();
 			$cache->set ($cache_key, $data, $cache_duration);
 			return $data;
 		}
@@ -195,7 +198,7 @@ class VmCached
 			return $data;
 		}
 		else {
-			$data = $this->vm->get_coach_change_data ($coach_id, $num_page);
+			$data = $this->vms->get_coach_change_data ($coach_id, $num_page);
 			$cache->set ($cache_key, $data, $cache_duration);
 			return $data;
 		}

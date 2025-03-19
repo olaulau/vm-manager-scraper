@@ -1,39 +1,21 @@
 <?php
 namespace Lib;
 
+use Dom\HTMLDocument;
 use Dom\HTMLElement;
 use ErrorException;
 
 
-class VM
+class VmScraper
 {
 	
-	function __construct (public WebsiteTalk $wt = new WebsiteTalk ()) {}
-	
-	
-	public function authenticate (string $login, string $password) : ?array
-	{
-		$url = "http://vm-manager.org/index.php?view=Login";
-		$query = $this->wt->createQuery($url, ["login" => $login, "pass" => $password]);
-		$query->send();
-		
-		$query_res = $query->response_body;
-		$res = !str_contains($query_res, "Vous avez entré un login ou un mot de passe incorrect."); // we should see this string only on failed auth
-		if($res === true) {
-			$cookies = $query->response_headers ["set-cookie"];
-			return $cookies;
-		}
-		else {
-			return null;
-		}
-	}
+	function __construct (public WebsiteTalk $wt) {}
 	
 	
 	public function get_team_data () : array
 	{
-		$url = "http://vm-manager.org/Ajax_handler.php?phpsite=view_body.php&action=Squad";
-		$query = $this->wt->createQuery($url);
-		$raw_content = $query->send();
+		$vmq = new VmQuery($this->wt);
+		$raw_content = $vmq->get_team_data();
 
 		// clean JSON
 		$raw_content = WebScrapper::clean_dirty_json($raw_content);
@@ -52,7 +34,7 @@ class VM
 		}
 
 		// browse HTML v5
-		$dom = \Dom\HTMLDocument::createFromString($html, LIBXML_NOERROR);
+		$dom = HTMLDocument::createFromString($html, LIBXML_NOERROR);
 
 		// headers
 		$data_headers = WebScrapper::extract_data_from_dom($dom, 'body > table:nth-child(2) > tbody > tr > td > table:first-child > tbody > tr:nth-child(2)', 'td.fourth');
@@ -71,9 +53,8 @@ class VM
 	
 	public function get_league_data () : array
 	{
-		$url = "https://vm-manager.org/Ajax_handler.php?phpsite=view_body.php&action=League";
-		$query = $this->wt->createQuery($url);
-		$raw_content = $query->send();
+		$vmq = new VmQuery($this->wt);
+		$raw_content = $vmq->get_league_data();
 		
 		// clean JSON
 		$raw_content = WebScrapper::clean_dirty_json($raw_content);
@@ -89,7 +70,7 @@ class VM
 		$html = $decoded ["body"];
 
 		// browse HTML v5
-		$dom = \Dom\HTMLDocument::createFromString($html, LIBXML_NOERROR);
+		$dom = HTMLDocument::createFromString($html, LIBXML_NOERROR);
 		
 		// headers
 		$data_headers = WebScrapper::extract_data_from_dom($dom, 'body > form#postform > table > tbody > tr > td > table:first-child > tbody > tr:nth-child(2)', 'td.fourth');
@@ -107,9 +88,8 @@ class VM
 	
 	public function get_transfert_data (int $num_page=1) : array
 	{
-		$url = "https://vm-manager.org/Ajax_handler.php?phpsite=view_body.php&action=TransferList&site=$num_page";
-		$query = $this->wt->createQuery($url);
-		$raw_content = $query->send();
+		$vmq = new VmQuery($this->wt);
+		$raw_content = $vmq->get_transfert_data($num_page);
 		
 		// clean JSON
 		$raw_content = WebScrapper::clean_dirty_json($raw_content);
@@ -125,7 +105,7 @@ class VM
 		$html = $decoded ["body"];
 
 		// browse HTML v5
-		$dom = \Dom\HTMLDocument::createFromString($html, LIBXML_NOERROR);
+		$dom = HTMLDocument::createFromString($html, LIBXML_NOERROR);
 		
 		// headers
 		$data_headers = WebScrapper::extract_data_from_dom($dom, 'body > table:nth-child(2) > tbody > tr > td > table > tbody > tr:nth-child(2)', 'td.fourth');
@@ -144,9 +124,8 @@ class VM
 	
 	public function get_coaches_data () : array
 	{
-		$url = "https://vm-manager.org/Ajax_handler.php?phpsite=view_body.php&action=Coaches";
-		$query = $this->wt->createQuery($url);
-		$raw_content = $query->send();
+		$vmq = new VmQuery($this->wt);
+		$raw_content = $vmq->get_coaches_data();
 		
 		// clean JSON
 		$raw_content = WebScrapper::clean_dirty_json($raw_content);
@@ -162,7 +141,7 @@ class VM
 		$html = $decoded ["body"];
 
 		// browse HTML v5
-		$dom = \Dom\HTMLDocument::createFromString($html, LIBXML_NOERROR);
+		$dom = HTMLDocument::createFromString($html, LIBXML_NOERROR);
 		
 		$tr1_list = $dom->querySelectorAll("body > table:nth-child(1) > tbody > tr");
 		$tr1_array = iterator_to_array($tr1_list);
@@ -241,9 +220,8 @@ class VM
 	
 	public function get_coach_change_data (int $coach_id, int $num_page=1) : array
 	{
-		$url = "https://vm-manager.org/Ajax_handler.php?phpsite=view_body.php&action=CoachChange&coachId=$coach_id&site=$num_page";
-		$query = $this->wt->createQuery($url);
-		$raw_content = $query->send();
+		$vmq = new VmQuery($this->wt);
+		$raw_content = $vmq->get_coach_change_data($coach_id, $num_page);
 		
 		// clean JSON
 		$raw_content = WebScrapper::clean_dirty_json($raw_content);
@@ -260,7 +238,7 @@ class VM
 		// echo $html; die;
 
 		// browse HTML v5
-		$dom = \Dom\HTMLDocument::createFromString($html, LIBXML_NOERROR);
+		$dom = HTMLDocument::createFromString($html, LIBXML_NOERROR);
 		// WebScrapper::display_html_tree($dom); die;
 		
 		// headers

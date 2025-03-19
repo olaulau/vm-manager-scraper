@@ -59,7 +59,7 @@ class DataCtrl extends PrivateCtrl
 		// Matrix::send_csv_table ($data);
 		
 		// display talk stats
-		echo "<hr> {$vmc->vm->wt->queries_count} quer" . ($vmc->vm->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vmc->vm->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
+		echo "<hr> {$vmc->vms->wt->queries_count} quer" . ($vmc->vms->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vmc->vms->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
 		die;
 	}
 	
@@ -79,7 +79,7 @@ class DataCtrl extends PrivateCtrl
 		Matrix::display_html_table ($league_data);
 		
 		// display talk stats
-		echo "<hr> {$vmc->vm->wt->queries_count} quer" . ($vmc->vm->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vmc->vm->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
+		echo "<hr> {$vmc->vms->wt->queries_count} quer" . ($vmc->vms->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vmc->vms->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
 		die;
 	}
 	
@@ -99,7 +99,7 @@ class DataCtrl extends PrivateCtrl
 		Matrix::display_html_table ($transferts_data);
 		
 		// display talk stats
-		echo "<hr> {$vmc->vm->wt->queries_count} quer" . ($vmc->vm->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vmc->vm->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
+		echo "<hr> {$vmc->vms->wt->queries_count} quer" . ($vmc->vms->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vmc->vms->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
 		die;
 	}
 	
@@ -127,7 +127,7 @@ class DataCtrl extends PrivateCtrl
 		}
 		
 		// display talk stats
-		echo "<hr> {$vmc->vm->wt->queries_count} quer" . ($vmc->vm->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vmc->vm->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
+		echo "<hr> {$vmc->vms->wt->queries_count} quer" . ($vmc->vms->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vmc->vms->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
 		die;
 	}
 	
@@ -153,7 +153,7 @@ class DataCtrl extends PrivateCtrl
 		Matrix::display_html_table ($coach_change_data);
 		
 		// display talk stats
-		echo "<hr> {$vmc->vm->wt->queries_count} quer" . ($vmc->vm->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vmc->vm->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
+		echo "<hr> {$vmc->vms->wt->queries_count} quer" . ($vmc->vms->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vmc->vms->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
 		die;
 	}
 	
