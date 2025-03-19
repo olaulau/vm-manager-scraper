@@ -4,8 +4,7 @@ namespace COMMON__\ctrl;
 use Base;
 use ErrorException;
 use Lib\Matrix;
-use Lib\VM;
-use Lib\VMHelper;
+use Lib\VmCached;
 
 
 class DataCtrl extends PrivateCtrl
@@ -50,19 +49,17 @@ class DataCtrl extends PrivateCtrl
 		$f3 = Base::instance();
 		$f3->config('conf/index.ini');
 		
-		// auth
-		$vm = VMHelper::auth_from_session();
-		
 		// get team data
 		?>
 		<h2>team</h2>
 		<?php
-		$players_data = $vm->get_team_data ();
-		Matrix::display_html_table ($players_data);
-		// Matrix::send_csv_table ($players_data);
+		$vmc = new VmCached ();
+		$data = $vmc->get_team_data ();
+		Matrix::display_html_table ($data);
+		// Matrix::send_csv_table ($data);
 		
 		// display talk stats
-		echo "<hr> {$vm->wt->queries_count} quer" . ($vm->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vm->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
+		echo "<hr> {$vmc->vm->wt->queries_count} quer" . ($vmc->vm->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vmc->vm->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
 		die;
 	}
 	
@@ -74,7 +71,7 @@ class DataCtrl extends PrivateCtrl
 		$f3->config('conf/index.ini');
 		
 		// auth
-		$vm = VMHelper::auth_from_session();
+		$vm = VmCached::auth_from_session();
 		
 		// get league data
 		?>
@@ -96,7 +93,7 @@ class DataCtrl extends PrivateCtrl
 		$f3->config('conf/index.ini');
 		
 		// auth
-		$vm = VMHelper::auth_from_session();
+		$vm = VmCached::auth_from_session();
 		
 		// get transfert data
 		?>
@@ -118,7 +115,7 @@ class DataCtrl extends PrivateCtrl
 		$f3->config('conf/index.ini');
 		
 		// auth
-		$vm = VMHelper::auth_from_session();
+		$vm = VmCached::auth_from_session();
 		
 		// get coaches data
 		?>
@@ -153,7 +150,7 @@ class DataCtrl extends PrivateCtrl
 		}
 		
 		// auth
-		$vm = VMHelper::auth_from_session();
+		$vm = VmCached::auth_from_session();
 		
 		// get coachChange data
 		?>

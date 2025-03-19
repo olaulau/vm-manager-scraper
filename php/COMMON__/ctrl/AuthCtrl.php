@@ -3,7 +3,7 @@ namespace COMMON__\ctrl;
 
 use Base;
 use Lib\VM;
-
+use Lib\VmCached;
 
 class AuthCtrl extends Ctrl
 {
@@ -46,8 +46,7 @@ class AuthCtrl extends Ctrl
 		$login = $f3->get("POST.login");
 		$password = $f3->get("POST.password");
 		
-		$vm = new VM ();
-		$res = $vm->authenticate($login, $password, true);
+		$res = VmCached::authenticate($login, $password);
 		if($res === false) {
 			$f3->clear("SESSION.user");
 			$f3->reroute(["login"]);
