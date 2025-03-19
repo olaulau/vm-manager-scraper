@@ -135,7 +135,9 @@ class VM
 		return array_merge($data_headers, $data);
 	}
 	
-	
+	/**
+	 * @deprecated
+	 */
 	public function get_transfert_data_pages (int $nb_pages=1, int $start_offset=1)
 	{
 		if ($nb_pages < 1 || $start_offset < 1) {
@@ -294,7 +296,9 @@ class VM
 		return array_merge($data_headers, $data);
 	}
 	
-	
+	/**
+	 * @deprecated
+	 */
 	public function get_coach_change_data_pages (int $coach_id, int $nb_pages=1, int $start_offset=1)
 	{
 		if ($nb_pages < 1 || $start_offset < 1) {

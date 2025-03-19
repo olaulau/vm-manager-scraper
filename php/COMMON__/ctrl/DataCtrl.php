@@ -53,7 +53,7 @@ class DataCtrl extends PrivateCtrl
 		?>
 		<h2>team</h2>
 		<?php
-		$vmc = new VmCached ();
+		$vmc = new VmCached (VmCached::auth_from_session());
 		$data = $vmc->get_team_data ();
 		Matrix::display_html_table ($data);
 		// Matrix::send_csv_table ($data);
@@ -70,18 +70,16 @@ class DataCtrl extends PrivateCtrl
 		$f3 = Base::instance();
 		$f3->config('conf/index.ini');
 		
-		// auth
-		$vm = VmCached::auth_from_session();
-		
 		// get league data
 		?>
 		<h2>league</h2>
 		<?php
-		$league_data = $vm->get_league_data ();
+		$vmc = new VmCached (VmCached::auth_from_session());
+		$league_data = $vmc->get_league_data ();
 		Matrix::display_html_table ($league_data);
 		
 		// display talk stats
-		echo "<hr> {$vm->wt->queries_count} quer" . ($vm->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vm->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
+		echo "<hr> {$vmc->vm->wt->queries_count} quer" . ($vmc->vm->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vmc->vm->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
 		die;
 	}
 	
@@ -92,18 +90,16 @@ class DataCtrl extends PrivateCtrl
 		$f3 = Base::instance();
 		$f3->config('conf/index.ini');
 		
-		// auth
-		$vm = VmCached::auth_from_session();
-		
 		// get transfert data
 		?>
 		<h2>transferts</h2>
 		<?php
-		$transferts_data = $vm->get_transfert_data_pages(4);
+		$vmc = new VmCached (VmCached::auth_from_session());
+		$transferts_data = $vmc->get_transfert_data_pages(4);
 		Matrix::display_html_table ($transferts_data);
 		
 		// display talk stats
-		echo "<hr> {$vm->wt->queries_count} quer" . ($vm->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vm->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
+		echo "<hr> {$vmc->vm->wt->queries_count} quer" . ($vmc->vm->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vmc->vm->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
 		die;
 	}
 	
@@ -114,14 +110,13 @@ class DataCtrl extends PrivateCtrl
 		$f3 = Base::instance();
 		$f3->config('conf/index.ini');
 		
-		// auth
-		$vm = VmCached::auth_from_session();
 		
 		// get coaches data
 		?>
 		<h2>coaches</h2>
 		<?php
-		$coaches_data = $vm->get_coaches_data();
+		$vmc = new VmCached (VmCached::auth_from_session());
+		$coaches_data = $vmc->get_coaches_data();
 		Matrix::display_html_table ($coaches_data);
 		
 		array_shift($coaches_data); // remove headers
@@ -132,7 +127,7 @@ class DataCtrl extends PrivateCtrl
 		}
 		
 		// display talk stats
-		echo "<hr> {$vm->wt->queries_count} quer" . ($vm->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vm->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
+		echo "<hr> {$vmc->vm->wt->queries_count} quer" . ($vmc->vm->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vmc->vm->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
 		die;
 	}
 	
@@ -149,18 +144,16 @@ class DataCtrl extends PrivateCtrl
 			throw new ErrorException("invalid parameters");
 		}
 		
-		// auth
-		$vm = VmCached::auth_from_session();
-		
 		// get coachChange data
 		?>
 		<h2>coach change (<?= $coach_id ?>)</h2>
 		<?php
-		$coach_change_data = $vm->get_coach_change_data_pages($coach_id, 4);
+		$vmc = new VmCached (VmCached::auth_from_session());
+		$coach_change_data = $vmc->get_coach_change_data_pages($coach_id, 4);
 		Matrix::display_html_table ($coach_change_data);
 		
 		// display talk stats
-		echo "<hr> {$vm->wt->queries_count} quer" . ($vm->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vm->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
+		echo "<hr> {$vmc->vm->wt->queries_count} quer" . ($vmc->vm->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vmc->vm->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
 		die;
 	}
 	
