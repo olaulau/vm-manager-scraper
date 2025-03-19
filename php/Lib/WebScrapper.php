@@ -2,10 +2,11 @@
 namespace Lib;
 
 use DateTime;
+use Dom\Element;
 use Dom\HTMLDocument;
 use Dom\HTMLElement;
 use Dom\Node;
-
+use ErrorException;
 
 abstract class WebScrapper
 {
@@ -20,21 +21,54 @@ abstract class WebScrapper
 	}
 	
 	
-	public static function extract_data_from_dom (HTMLDocument $dom, string $row_selector, string $cell_sub_selector) : array
+	public static function extract_data_from_dom (HTMLDocument $dom, string $row_selector, string $cell_sub_selector, string $extrators_type = "normal") : array
 	{
 		$res = [];
 		$rows = $dom->querySelectorAll($row_selector);
 		foreach ($rows as $row) {
 			$row_data = [];
 			$cells = $row->querySelectorAll($cell_sub_selector);
-			foreach ($cells as $cell) {
-				$val = trim($cell->textContent);
-				$row_data [] = $val;
+			if($cells->count() > 0) {
+				if($extrators_type === "normal") {
+					$extractors = array_fill(0, $cells->count(), "textContent");
+				}
+				elseif($extrators_type === "coachChange") {
+					$extractors = array_fill(0, ($cells->count())-2, "textContent");
+					$extractors [] = "coach_change_id";
+					$extractors [] = "textContent";
+				}
+				foreach ($cells as $x => $cell) {
+					$extractor = $extractors [$x] ?? "textContent";
+					$val = self::$extractor ($cell);
+					$row_data [] = $val;
+				}
+				$res [] = $row_data;
 			}
-			$res [] = $row_data;
 		}
 		return $res;
 	}
+	
+	private static function textContent (Element $cell)
+	{
+		return trim($cell->textContent);
+	}
+	
+	private static function coach_change_id (Element $cell) : ?string
+	{
+		$span = $cell->firstChild; /** @var Element $span */
+		if(empty($span)) {
+			return null;
+		}
+		$onclick = $span->getAttribute("onclick");
+		$regex = "/CoachChangeSave&coachId=(\d+)&newCoachId=(\d+)&countryId=(\d+)&age=(\d+)/";
+		$res = preg_match($regex, $onclick, $matches);
+		if($res === false) {
+			throw new ErrorException("coach change regex failed");
+		}
+		return $matches [2];
+	}
+	
+	
 	
 	
 	public static function display_html_tree (Node $node, int $depth = 0): void

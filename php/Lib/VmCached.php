@@ -9,7 +9,7 @@ use ErrorException;
 class VmCached
 {
 	
-	public static function auth_from_session () : ?WebsiteTalk
+	public static function auth_from_session () : WebsiteTalk
 	{
 		$f3 = Base::instance();
 		
@@ -29,7 +29,7 @@ class VmCached
 			return new WebsiteTalk($cookies);
 		}
 		else {
-			return null;
+			return new WebsiteTalk();
 		}
 	}
 	

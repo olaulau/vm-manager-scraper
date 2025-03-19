@@ -39,5 +39,4 @@ la taille fait un bonus / malus sur les caractéristiques attaques défense (cf.
 
 
 
-coach change : manque les ID
 - login : throttling

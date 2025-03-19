@@ -229,7 +229,7 @@ class VmScraper
 			if(empty($matches[1])) {
 				throw new ErrorException("coach id not found");
 			}
-			$coach ["id"] = $matches[1];
+			$coach ["id"] = intval ($matches[1]);
 			
 			$coaches [] = $coach;
 		}
@@ -268,12 +268,18 @@ class VmScraper
 		// headers
 		$data_headers = WebScrapper::extract_data_from_dom($dom, 'body > table > tbody > tr > td > table > tbody > tr:nth-child(2)', 'td.fourth');
 		$data_headers = Matrix::remove_empty($data_headers);
+		$data_headers [0] [] = "id";
 		
 		// rows
-		$data = WebScrapper::extract_data_from_dom($dom, 'body > table > tbody > tr:not(:nth-last-child(-n+7)) > td > table > tbody > tr:nth-child(2)', 'td.second:not(:has(> span))');
+		$data = WebScrapper::extract_data_from_dom(
+			$dom,
+			'body > table > tbody > tr:not(:nth-last-child(-n+7)) > td > table > tbody > tr:nth-child(2)',
+			'td.second',
+			"coachChange"
+		);
 		$data = Matrix::remove_empty($data);
 		$data = Matrix::pack($data);
-		$data = Matrix::parse_values($data, ["string", "int", "int", "int", "int", "int", "int", "int", "int", "int", "string"]);
+		$data = Matrix::parse_values($data, ["string", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int"]);
 
 		return array_merge($data_headers, $data);
 	}
