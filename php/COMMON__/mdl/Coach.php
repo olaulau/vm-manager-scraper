@@ -4,6 +4,7 @@ namespace COMMON__\mdl;
 use DB\Cortex;
 use DB\SQL\Schema;
 
+
 class Coach extends Cortex
 {
 	
@@ -57,7 +58,7 @@ class Coach extends Cortex
 			"unique"	=> false,
 			// "default"	=> null,
 		],
-		"adaptabilité" => [
+		"adaptabilite" => [
 			"type"		=> Schema::DT_INT,
 			"nullable"	=> true,
 			"index"		=> false,
