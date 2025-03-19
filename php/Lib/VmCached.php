@@ -35,7 +35,11 @@ class VmCached
 	}
 	
 	
-	function __construct (public VM $vm = new VM ()) {}
+	function __construct (public ?VM $vm = new VM ()) {
+		if(empty($this->vm)) {
+			$this->vm = new VM ();
+		}
+	}
 	
 	
 	public function authenticate (string $login, string $password) : bool

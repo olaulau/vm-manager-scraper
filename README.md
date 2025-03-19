@@ -23,11 +23,6 @@ PoC
 
 
 # TODO
-- get auth credential from an auth form (instead of static config)
-- store data into a cache (or sqlite, mysql) ?
-
-- put http query in cache
-- execute rest of code as if
 - store final data into a in-memory DB (sqlite, mariadb ?) each execution
 
 
