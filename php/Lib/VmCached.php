@@ -53,7 +53,7 @@ class VmCached
 		else {
 			$this->vm = new VM ();
 			$data = $this->vm->authenticate ($login, $password);
-			if(!empty($cookies)) {
+			if(!empty($data)) {
 				$cache->set ($cache_key, $data, $cache_duration);
 				return true;
 			}
