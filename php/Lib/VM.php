@@ -11,7 +11,7 @@ class VM
 	function __construct (public WebsiteTalk $wt = new WebsiteTalk ()) {}
 	
 	
-	public function authenticate (string $login, string $password) : bool
+	public function authenticate (string $login, string $password) : ?array
 	{
 		$url = "http://vm-manager.org/index.php?view=Login";
 		$query = $this->wt->createQuery($url, ["login" => $login, "pass" => $password]);
@@ -19,7 +19,13 @@ class VM
 		
 		$query_res = $query->response_body;
 		$res = !str_contains($query_res, "Vous avez entré un login ou un mot de passe incorrect."); // we should see this string only on failed auth
-		return ($res);
+		if($res === true) {
+			$cookies = $query->response_headers ["set-cookie"];
+			return $cookies;
+		}
+		else {
+			return null;
+		}
 	}
 	
 	
