@@ -46,7 +46,7 @@ class VmCached
 	{
 		$hashed_password = hash("sha256", $password);
 		$cache_key = "Login_{$login}_{$hashed_password}";
-		$cache_duration = 3600;
+		$cache_duration = 60*20; // 20 minutes
 		
 		// check if we don't have cookies in cache, to avoid remote auth
 		$cache = Cache::instance();

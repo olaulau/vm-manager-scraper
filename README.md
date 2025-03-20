@@ -36,3 +36,7 @@ changement coach :
 	-> attributs défensifs
 en partant d'un joueur, trouver dans "transferts" un qui soit meilleur (uniquement sur les caractéristiques propre à son poste, cf. tableau du manuel)
 la taille fait un bonus / malus sur les caractéristiques attaques défense (cf. tableau)
+
+
+- essayer mysql memory engine (les perfs sqlite memory sont bof)
+- mettre des indices de tableau propres partout

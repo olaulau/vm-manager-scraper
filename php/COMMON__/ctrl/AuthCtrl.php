@@ -2,9 +2,9 @@
 namespace COMMON__\ctrl;
 
 use Base;
-use Lib\VmScraper;
 use Lib\VmCached;
 use Lib\WebsiteTalk;
+
 
 class AuthCtrl extends Ctrl
 {

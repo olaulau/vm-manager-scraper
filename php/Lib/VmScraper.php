@@ -280,6 +280,7 @@ class VmScraper
 		$data = Matrix::remove_empty($data);
 		$data = Matrix::pack($data);
 		$data = Matrix::parse_values($data, ["string", "int", "int", "int", "int", "int", "int", "int", "int", "int", "int"]);
+		$data = Matrix::keys($data, $data_headers [0]);
 
 		return array_merge($data_headers, $data);
 	}

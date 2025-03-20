@@ -125,6 +125,17 @@ class Matrix
 	}
 	
 	
+	public static function keys (array $data, array $keys) : array
+	{
+		$res = [];
+		foreach ($data as $row) {
+			$new_row = array_combine($keys, array_values ($row));
+			$res [] = $new_row;
+		}
+		return $res;
+	}
+	
+	
 	public static function parse_values (array $data, array $formats): array
 	{
 		foreach ($data as $y => &$row) {

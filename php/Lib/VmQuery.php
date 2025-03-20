@@ -1,6 +1,7 @@
 <?php
 namespace Lib;
 
+use ErrorException;
 
 class VmQuery
 {
@@ -26,12 +27,26 @@ class VmQuery
 	}
 	
 	
+	public static function has_session_error (string $raw_content) : bool
+	{
+		return str_contains($raw_content, "{body: 'session Error 2");
+	}
+	
+	public static function check_session_error (string $raw_content) : void
+	{
+		if (self::has_session_error($raw_content)) {
+			throw new ErrorException("remote session error");
+		}
+	}
+	
+	
 	public function get_team_data () : string
 	{
 		$url = "http://vm-manager.org/Ajax_handler.php?phpsite=view_body.php&action=Squad";
 		$query = $this->wt->createQuery($url);
 		$query->send();
 		$raw_content = $query->response_body;
+		self::check_session_error ($raw_content);
 		return $raw_content;
 	}
 	
@@ -42,6 +57,7 @@ class VmQuery
 		$query = $this->wt->createQuery($url);
 		$query->send();
 		$raw_content = $query->response_body;
+		self::check_session_error ($raw_content);
 		return $raw_content;
 	}
 	
@@ -52,6 +68,7 @@ class VmQuery
 		$query = $this->wt->createQuery($url);
 		$query->send();
 		$raw_content = $query->response_body;
+		self::check_session_error ($raw_content);
 		return $raw_content;
 	}
 	
@@ -62,6 +79,7 @@ class VmQuery
 		$query = $this->wt->createQuery($url);
 		$query->send();
 		$raw_content = $query->response_body;
+		self::check_session_error ($raw_content);
 		return $raw_content;
 	}
 	
@@ -72,6 +90,7 @@ class VmQuery
 		$query = $this->wt->createQuery($url);
 		$query->send();
 		$raw_content = $query->response_body;
+		self::check_session_error ($raw_content);
 		return $raw_content;
 	}
 	
