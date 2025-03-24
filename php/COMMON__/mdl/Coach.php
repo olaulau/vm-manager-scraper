@@ -113,6 +113,4 @@ class Coach extends Cortex
 	protected $table = "coach";
 	protected $primary = "id";
 	
-	
-	
 }
