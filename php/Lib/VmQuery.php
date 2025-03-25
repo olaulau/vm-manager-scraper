@@ -1,7 +1,8 @@
 <?php
 namespace Lib;
 
-use ErrorException;
+use Base;
+
 
 class VmQuery
 {
@@ -35,7 +36,8 @@ class VmQuery
 	public static function check_session_error (string $raw_content) : void
 	{
 		if (self::has_session_error($raw_content)) {
-			throw new ErrorException("remote session error");
+			$f3 = Base::instance();
+			$f3->reroute(["login", [], ["redirect_url" => $f3->get("URI")]]);
 		}
 	}
 	

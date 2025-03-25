@@ -60,7 +60,14 @@ class AuthCtrl extends Ctrl
 				"login"				=> $login,
 				"hashed_password"	=> $hashed_password,
 			]);
-			$f3->reroute(["data"]);
+			
+			$redirect_url = $f3->get("GET.redirect_url");
+			if(!empty($redirect_url)) {
+				$f3->reroute($f3->get("GET.redirect_url"));
+			}
+			else {
+				$f3->reroute(["data"]);
+			}
 		}
 		die;
 	}
