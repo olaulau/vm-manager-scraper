@@ -2,7 +2,8 @@
 namespace COMMON__\ctrl;
 
 use Base;
-use Lib\VmCached;
+use Cache;
+use Lib\VmQueryCached;
 use Lib\WebsiteTalk;
 
 
@@ -47,12 +48,12 @@ class AuthCtrl extends Ctrl
 		$login = $f3->get("POST.login");
 		$password = $f3->get("POST.password");
 		
-		$vmc = new VmCached(new WebsiteTalk());
-		$res = $vmc->authenticate($login, $password);
-		if($res === false) {
+		$vqc = new VmQueryCached(new WebsiteTalk());
+		$res = $vqc->authenticate($login, $password);
+		if($res === null) {
 			sleep(3);
 			$f3->clear("SESSION.user");
-			$f3->reroute(["login"]);
+			$f3->reroute(["login"], [], ["message" => "auth failed"]);
 		}
 		else {
 			$hashed_password = hash("sha256", $password);
@@ -75,8 +76,16 @@ class AuthCtrl extends Ctrl
 	
 	public static function logoutGET (Base $f3, array $url, string $controler)
 	{
+		$cache = Cache::instance();
+		
+		$user = $f3->get("SESSION.user");
+		if(!empty($user)) {
+			$cache_key = "{$user ["login"]}_{$user ["hashed_password"]}_auth_cookies__http";
+			$cache->clear($cache_key);
+		}
+		
 		$f3->clear("SESSION.user");
-		$f3->reroute(["homepage"]);
+		$f3->reroute(["login", [], ["message" => "explicit logout"]]);
 		die;
 	}
 	

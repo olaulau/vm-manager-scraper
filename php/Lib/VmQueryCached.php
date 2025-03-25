@@ -6,7 +6,7 @@ use Cache;
 use ErrorException;
 
 
-class VmCached
+class VmQueryCached
 {
 	
 	public static function auth_from_session () : WebsiteTalk
@@ -20,11 +20,11 @@ class VmCached
 		
 		$login = $user ["login"];
 		$hashed_password = $user ["hashed_password"];
-		$cache_key = "{$login}_{$hashed_password}_auth_cookies";
+		$cache_key = "{$login}_{$hashed_password}_auth_cookies__http";
 		
 		// check if we don't have cookies in cache, to avoid remote auth
 		$cache = Cache::instance();
-		$cookies = $cache->get ($cache_key);
+		$cookies = $cache->get ($cache_key);  //TODO refactorise
 		if (!empty ($cookies)) {
 			return new WebsiteTalk($cookies);
 		}
@@ -45,12 +45,12 @@ class VmCached
 	public function authenticate (string $login, string $password) : ?array
 	{
 		$hashed_password = hash("sha256", $password);
-		$cache_key = "{$login}_{$hashed_password}_auth_cookies";
+		$cache_key = "{$login}_{$hashed_password}_auth_cookies__http";
 		$cache_duration = 60 * 60; // 1 hour
 		
 		// check if we don't have cookies in cache, to avoid remote auth
 		$cache = Cache::instance();
-		$data = $cache->get ($cache_key);
+		$data = $cache->get ($cache_key); //TODO refactorise
 		if (!empty ($data)) {
 			return $data;
 		}
@@ -70,7 +70,7 @@ class VmCached
 		$f3 = Base::instance();
 		
 		$user = $f3->get("SESSION.user");
-		$cache_key = "{$user ["login"]}_{$user["hashed_password"]}_team";
+		$cache_key = "{$user ["login"]}_{$user["hashed_password"]}_team__http";
 		$cache_duration = 60 * 60; // 1 hour
 		
 		// check if we don't have data in cache, to avoid remote query
@@ -93,7 +93,7 @@ class VmCached
 		$f3 = Base::instance();
 		
 		$user = $f3->get("SESSION.user");
-		$cache_key = "{$user ["login"]}_{$user["hashed_password"]}_league";
+		$cache_key = "{$user ["login"]}_{$user["hashed_password"]}_league__http";
 		$cache_duration = 60 * 60; // 1 hour
 		
 		// check if we don't have data in cache, to avoid remote query
@@ -116,7 +116,7 @@ class VmCached
 		$f3 = Base::instance();
 		
 		$user = $f3->get("SESSION.user");
-		$cache_key = "{$user ["login"]}_{$user["hashed_password"]}_transfert_{$num_page}";
+		$cache_key = "{$user ["login"]}_{$user["hashed_password"]}_transfert_{$num_page}__http";
 		$cache_duration = 60 * 60; // 1 hour
 		
 		// check if we don't have data in cache, to avoid remote query
@@ -139,7 +139,7 @@ class VmCached
 		$f3 = Base::instance();
 		
 		$user = $f3->get("SESSION.user");
-		$cache_key = "{$user ["login"]}_{$user["hashed_password"]}_coaches";
+		$cache_key = "{$user ["login"]}_{$user["hashed_password"]}_coaches__http";
 		$cache_duration = 60 * 60; // 1 hour
 		
 		// check if we don't have data in cache, to avoid remote query
@@ -162,7 +162,7 @@ class VmCached
 		$f3 = Base::instance();
 		
 		$user = $f3->get("SESSION.user");
-		$cache_key = "{$user ["login"]}_{$user["hashed_password"]}_coach_change_{$coach_id}_{$num_page}";
+		$cache_key = "{$user ["login"]}_{$user["hashed_password"]}_coach_change_{$coach_id}_{$num_page}__http";
 		$cache_duration = 60 * 60; // 1 hour
 		
 		// check if we don't have data in cache, to avoid remote query

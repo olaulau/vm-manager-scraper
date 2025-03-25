@@ -14,8 +14,8 @@ class VmScraper
 	
 	public function get_team_data () : array
 	{
-		$vmq = new VmCached($this->wt);
-		$raw_content = $vmq->get_team_data();
+		$vqc = new VmQueryCached($this->wt);
+		$raw_content = $vqc->get_team_data();
 
 		// clean JSON
 		$raw_content = WebScrapper::clean_dirty_json($raw_content);
@@ -53,8 +53,8 @@ class VmScraper
 	
 	public function get_league_data () : array
 	{
-		$vmq = new VmCached($this->wt);
-		$raw_content = $vmq->get_league_data();
+		$vqc = new VmQueryCached($this->wt);
+		$raw_content = $vqc->get_league_data();
 		
 		// clean JSON
 		$raw_content = WebScrapper::clean_dirty_json($raw_content);
@@ -88,8 +88,8 @@ class VmScraper
 	
 	public function get_transfert_data (int $num_page=1) : array
 	{
-		$vmq = new VmCached($this->wt);
-		$raw_content = $vmq->get_transfert_data($num_page);
+		$vqc = new VmQueryCached($this->wt);
+		$raw_content = $vqc->get_transfert_data($num_page);
 		
 		// clean JSON
 		$raw_content = WebScrapper::clean_dirty_json($raw_content);
@@ -122,34 +122,10 @@ class VmScraper
 	}
 	
 	
-	public function get_transfert_data_pages (int $nb_pages=1, int $start_offset=1)
-	{
-		if ($nb_pages < 1 || $start_offset < 1) {
-			throw new ErrorException("parameter problem");
-		}
-		
-		$res = [];
-		$page_num = $start_offset;
-		$cpt = 1;
-		do {
-			$data = $this->get_transfert_data ($page_num);
-			$headers = array_shift($data);
-			
-			$res = array_merge($res, $data);
-			$cpt ++;
-			$page_num ++;
-		}
-		while ($cpt <= $nb_pages);
-		
-		$res = array_merge([$headers], $res);
-		return $res;
-	}
-	
-	
 	public function get_coaches_data () : array
 	{
-		$vmq = new VmCached($this->wt);
-		$raw_content = $vmq->get_coaches_data();
+		$vqc = new VmQueryCached($this->wt);
+		$raw_content = $vqc->get_coaches_data();
 		
 		// clean JSON
 		$raw_content = WebScrapper::clean_dirty_json($raw_content);
@@ -235,7 +211,6 @@ class VmScraper
 		}
 		
 		$headers = array_keys ($coaches [0]);
-		// $coaches = Matrix::pack($coaches);
 		
 		return array_merge([$headers], $coaches);
 	}
@@ -243,8 +218,8 @@ class VmScraper
 	
 	public function get_coach_change_data (int $coach_id, int $num_page=1) : array
 	{
-		$vmq = new VmCached($this->wt);
-		$raw_content = $vmq->get_coach_change_data($coach_id, $num_page);
+		$vqc = new VmQueryCached($this->wt);
+		$raw_content = $vqc->get_coach_change_data($coach_id, $num_page);
 		
 		// clean JSON
 		$raw_content = WebScrapper::clean_dirty_json($raw_content);
@@ -289,30 +264,6 @@ class VmScraper
 		$data = Matrix::keys($data, $props);
 
 		return array_merge($data_headers, $data);
-	}
-	
-	
-	public function get_coach_change_data_pages (int $coach_id, int $nb_pages=1, int $start_offset=1)
-	{
-		if ($nb_pages < 1 || $start_offset < 1) {
-			throw new ErrorException("parameter problem");
-		}
-		
-		$res = [];
-		$page_num = $start_offset;
-		$cpt = 1;
-		do {
-			$data = $this->get_coach_change_data ($coach_id, $page_num);
-			$headers = array_shift($data);
-			
-			$res = array_merge($res, $data);
-			$cpt ++;
-			$page_num ++;
-		}
-		while ($cpt <= $nb_pages);
-		
-		$res = array_merge([$headers], $res);
-		return $res;
 	}
 	
 }
