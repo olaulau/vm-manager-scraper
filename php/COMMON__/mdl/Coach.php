@@ -37,49 +37,49 @@ class Coach extends Cortex
 			"unique"	=> true,
 			// "default"	=> null,
 		],
-		"entrainement_physique" => [
+		"phy" => [
 			"type"		=> Schema::DT_INT,
 			"nullable"	=> false,
 			"index"		=> false,
 			"unique"	=> false,
 			// "default"	=> null,
 		],
-		"travail_junior" => [
+		"jun" => [
 			"type"		=> Schema::DT_INT,
 			"nullable"	=> true,
 			"index"		=> false,
 			"unique"	=> false,
 			"default"	=> null,
 		],
-		"entrainement_technique" => [
+		"tch" => [
 			"type"		=> Schema::DT_INT,
 			"nullable"	=> false,
 			"index"		=> false,
 			"unique"	=> false,
 			// "default"	=> null,
 		],
-		"adaptabilite" => [
+		"ada" => [
 			"type"		=> Schema::DT_INT,
 			"nullable"	=> true,
 			"index"		=> false,
 			"unique"	=> false,
 			"default"	=> null,
 		],
-		"psychologie" => [
+		"psy" => [
 			"type"		=> Schema::DT_INT,
 			"nullable"	=> false,
 			"index"		=> false,
 			"unique"	=> false,
 			// "default"	=> null,
 		],
-		"niveau_discipline" => [
+		"dis" => [
 			"type"		=> Schema::DT_INT,
 			"nullable"	=> false,
 			"index"		=> false,
 			"unique"	=> false,
 			// "default"	=> null,
 		],
-		"motivation" => [
+		"mot" => [
 			"type"		=> Schema::DT_INT,
 			"nullable"	=> true,
 			"index"		=> false,

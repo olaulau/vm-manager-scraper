@@ -61,7 +61,7 @@ class DataCtrl extends PrivateCtrl
 		
 		// display talk stats
 		echo "<hr> {$vms->wt->queries_count} quer" . ($vms->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vms->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
-		die;
+		return;
 	}
 	
 	
@@ -81,7 +81,7 @@ class DataCtrl extends PrivateCtrl
 		
 		// display talk stats
 		echo "<hr> {$vms->wt->queries_count} quer" . ($vms->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vms->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
-		die;
+		return;
 	}
 	
 	
@@ -101,7 +101,7 @@ class DataCtrl extends PrivateCtrl
 		
 		// display talk stats
 		echo "<hr> {$vms->wt->queries_count} quer" . ($vms->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vms->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
-		die;
+		return;
 	}
 	
 	
@@ -129,7 +129,7 @@ class DataCtrl extends PrivateCtrl
 		
 		// display talk stats
 		echo "<hr> {$vms->wt->queries_count} quer" . ($vms->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vms->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
-		die;
+		return;
 	}
 	
 	
@@ -155,7 +155,7 @@ class DataCtrl extends PrivateCtrl
 		
 		// display talk stats
 		echo "<hr> {$vms->wt->queries_count} quer" . ($vms->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vms->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
-		die;
+		return;
 	}
 	
 }
