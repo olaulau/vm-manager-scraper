@@ -37,7 +37,7 @@ class VmQuery
 	{
 		if (self::has_session_error($raw_content)) {
 			$f3 = Base::instance();
-			$f3->reroute(["login", [], ["redirect_url" => $f3->get("URI")]]);
+			$f3->reroute(["login", [], ["redirect_url" => $f3->get("PATH")]]);
 		}
 	}
 	

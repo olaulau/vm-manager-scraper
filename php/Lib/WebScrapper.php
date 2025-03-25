@@ -8,6 +8,7 @@ use Dom\HTMLElement;
 use Dom\Node;
 use ErrorException;
 
+
 abstract class WebScrapper
 {
 

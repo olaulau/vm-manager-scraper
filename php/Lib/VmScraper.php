@@ -237,7 +237,6 @@ class VmScraper
 		$headers = array_keys ($coaches [0]);
 		// $coaches = Matrix::pack($coaches);
 		
-		$data = array_merge([$headers], $coaches);
 		return array_merge([$headers], $coaches);
 	}
 	

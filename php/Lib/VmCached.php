@@ -46,7 +46,7 @@ class VmCached
 	{
 		$hashed_password = hash("sha256", $password);
 		$cache_key = "{$login}_{$hashed_password}_auth_cookies";
-		$cache_duration = 60*20; // 20 minutes
+		$cache_duration = 60 * 60; // 1 hour
 		
 		// check if we don't have cookies in cache, to avoid remote auth
 		$cache = Cache::instance();
@@ -71,7 +71,7 @@ class VmCached
 		
 		$user = $f3->get("SESSION.user");
 		$cache_key = "{$user ["login"]}_{$user["hashed_password"]}_team";
-		$cache_duration = 3600;
+		$cache_duration = 60 * 60; // 1 hour
 		
 		// check if we don't have data in cache, to avoid remote query
 		$cache = Cache::instance();
@@ -94,7 +94,7 @@ class VmCached
 		
 		$user = $f3->get("SESSION.user");
 		$cache_key = "{$user ["login"]}_{$user["hashed_password"]}_league";
-		$cache_duration = 3600;
+		$cache_duration = 60 * 60; // 1 hour
 		
 		// check if we don't have data in cache, to avoid remote query
 		$cache = Cache::instance();
@@ -117,7 +117,7 @@ class VmCached
 		
 		$user = $f3->get("SESSION.user");
 		$cache_key = "{$user ["login"]}_{$user["hashed_password"]}_transfert_{$num_page}";
-		$cache_duration = 3600;
+		$cache_duration = 60 * 60; // 1 hour
 		
 		// check if we don't have data in cache, to avoid remote query
 		$cache = Cache::instance();
@@ -140,7 +140,7 @@ class VmCached
 		
 		$user = $f3->get("SESSION.user");
 		$cache_key = "{$user ["login"]}_{$user["hashed_password"]}_coaches";
-		$cache_duration = 3600;
+		$cache_duration = 60 * 60; // 1 hour
 		
 		// check if we don't have data in cache, to avoid remote query
 		$cache = Cache::instance();
@@ -163,7 +163,7 @@ class VmCached
 		
 		$user = $f3->get("SESSION.user");
 		$cache_key = "{$user ["login"]}_{$user["hashed_password"]}_coach_change_{$coach_id}_{$num_page}";
-		$cache_duration = 3600;
+		$cache_duration = 60 * 60; // 1 hour
 		
 		// check if we don't have data in cache, to avoid remote query
 		$cache = Cache::instance();
