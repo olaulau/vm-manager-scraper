@@ -110,12 +110,14 @@ class DbCtrl extends PrivateCtrl
 		
 		$db->commit();
 		
-		$logs = $db->log();
-		preg_match_all('/\((\d+\.\d+)ms\)/m', $logs, $matches);
-		$sql_total = array_sum($matches[1]);
-		echo count(explode(PHP_EOL, $logs)) . " queries ($sql_total ms) <br/>" . PHP_EOL;
-		echo "<pre>" . $logs . "</pre>";
-		return;
+		$page = [
+			"module"	=>	"COMMON__",
+			"layout"	=>	"default",
+			"name"		=>	"db",
+			"title"		=>	"db test",
+			"breadcrumbs" => static::breadcrumbs(),
+		];
+		self::renderPage($page);
 	}
 	
 }

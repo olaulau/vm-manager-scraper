@@ -2,7 +2,37 @@
 		<div class="container-fluid">
 			<div class="d-flex justify-content-between align-items-end">
 				<span>
-					<?= "{$wt->queries_count} quer" . ($wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($wt->queries_duration, 3, ",", " ") . " s)" ?>
+					<?php
+					$generation_time = microtime(true) - $f3->get("TIME");
+					?>
+					generation : <?= number_format ($generation_time*1000, 1, ",", " ") . " ms" ?>
+					
+					<?php
+					$http_count = 0;
+					$http_total = 0;
+					if(!empty($wt)) {
+						$http_count = $wt->queries_count;
+						$http_total = $wt->queries_duration;
+					}
+					?>
+					| HTTP : <?= "{$http_count} quer" . ($http_count>1 ? "ies" : "y") . " (" . number_format ($http_total*1000, 1, ",", " ") . " ms)" ?>
+					
+					<?php
+					$sql_count = 0;
+					$sql_total = 0;
+					if(!empty($db)) {
+						$logs = $db->log();
+						if(!empty($logs)) {
+							preg_match_all('/\((\d+\.\d+)ms\)/m', $logs, $matches);
+							$durations = $matches [1];
+							$sql_count = count($durations);
+							$sql_total = array_sum($durations);
+						}
+						?>
+						<?php
+					}
+					?>
+					| SQL : <?= "{$sql_count} quer" . ($sql_count>1 ? "ies" : "y") . " (" . number_format ($sql_total, 1, ",", " ") . " ms)" ?>
 				</span>
 				<span></span>
 				<span class="text-muted">
