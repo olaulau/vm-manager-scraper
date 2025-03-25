@@ -46,99 +46,82 @@ class DataCtrl extends PrivateCtrl
 	
 	public static function teamGET (Base $f3, array $url, string $controler)
 	{
-		// load FFF
-		$f3 = Base::instance();
-		$f3->config('conf/index.ini');
-		
 		// get team data
-		?>
-		<h2>team</h2>
-		<?php
 		$vsc = new VmScraperCached (VmQueryCached::auth_from_session());
 		$data = $vsc->get_team_data ();
-		Matrix::display_html_table ($data);
-		// Matrix::send_csv_table ($data);
+		$f3->set("data", $data);
+		$f3->set("wt", $vsc->wt);
 		
-		// display talk stats
-		echo "<hr> {$vsc->wt->queries_count} quer" . ($vsc->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vsc->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
-		return;
+		$page = [
+			"module"	=>	"COMMON__",
+			"layout"	=>	"default",
+			"name"		=>	"matrix",
+			"title"		=>	"Team",
+			"breadcrumbs" => static::breadcrumbs(),
+		];
+		self::renderPage($page);
 	}
 	
 	
 	public static function leagueGET (Base $f3, array $url, string $controler)
 	{
-		// load FFF
-		$f3 = Base::instance();
-		$f3->config('conf/index.ini');
-		
 		// get league data
-		?>
-		<h2>league</h2>
-		<?php
 		$vsc = new VmScraperCached (VmQueryCached::auth_from_session());
-		$league_data = $vsc->get_league_data ();
-		Matrix::display_html_table ($league_data);
+		$data = $vsc->get_league_data ();
+		$f3->set("data", $data);
+		$f3->set("wt", $vsc->wt);
 		
-		// display talk stats
-		echo "<hr> {$vsc->wt->queries_count} quer" . ($vsc->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vsc->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
-		return;
+		$page = [
+			"module"	=>	"COMMON__",
+			"layout"	=>	"default",
+			"name"		=>	"matrix",
+			"title"		=>	"League",
+			"breadcrumbs" => static::breadcrumbs(),
+		];
+		self::renderPage($page);
 	}
 	
 	
 	public static function transfertsGET (Base $f3, array $url, string $controler)
 	{
-		// load FFF
-		$f3 = Base::instance();
-		$f3->config('conf/index.ini');
-		
 		// get transfert data
-		?>
-		<h2>transferts</h2>
-		<?php
 		$vsc = new VmScraperCached (VmQueryCached::auth_from_session());
-		$transferts_data = $vsc->get_transfert_data_pages(4);
-		Matrix::display_html_table ($transferts_data);
+		$data = $vsc->get_transfert_data_pages(4);
+		$f3->set("data", $data);
+		$f3->set("wt", $vsc->wt);
 		
-		// display talk stats
-		echo "<hr> {$vsc->wt->queries_count} quer" . ($vsc->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vsc->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
-		return;
+		$page = [
+			"module"	=>	"COMMON__",
+			"layout"	=>	"default",
+			"name"		=>	"matrix",
+			"title"		=>	"Transferts",
+			"breadcrumbs" => static::breadcrumbs(),
+		];
+		self::renderPage($page);
 	}
 	
 	
 	public static function coachesGET (Base $f3, array $url, string $controler)
 	{
-		// load FFF
-		$f3 = Base::instance();
-		$f3->config('conf/index.ini');
-		
-		
 		// get coaches data
-		?>
-		<h2>coaches</h2>
-		<?php
 		$vsc = new VmScraperCached (VmQueryCached::auth_from_session());
-		$coaches_data = $vsc->get_coaches_data();
-		Matrix::display_html_table ($coaches_data);
+		$data = $vsc->get_coaches_data();
+		$f3->set("data", $data);
+		$f3->set("wt", $vsc->wt);
 		
-		array_shift($coaches_data); // remove headers
-		foreach ($coaches_data as $coach) {
-			?>
-			<a href="<?= $f3->get("BASE") . $f3->alias("coachChange", ["id" => $coach ["id"]]) ?>">changer <?= $coach ["id"] ?></a>
-			<?php
-		}
-		
-		// display talk stats
-		echo "<hr> {$vsc->wt->queries_count} quer" . ($vsc->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vsc->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
-		return;
+		$page = [
+			"module"	=>	"COMMON__",
+			"layout"	=>	"default",
+			"name"		=>	"coaches",
+			"title"		=>	"Coaches",
+			"breadcrumbs" => static::breadcrumbs(),
+		];
+		self::renderPage($page);
 	}
 	
 	
 	public static function coachChangeGET (Base $f3, array $url, string $controler)
 	{
-		// load FFF
-		$f3 = Base::instance();
-		$f3->config('conf/index.ini');
-		
 		// params
 		$coach_id = intval($f3->get("PARAMS.id"));
 		if(empty($coach_id) || $coach_id < 0) {
@@ -146,16 +129,19 @@ class DataCtrl extends PrivateCtrl
 		}
 		
 		// get coachChange data
-		?>
-		<h2>coach change (<?= $coach_id ?>)</h2>
-		<?php
 		$vsc = new VmScraperCached (VmQueryCached::auth_from_session());
-		$coach_change_data = $vsc->get_coach_change_data_pages($coach_id, 4);
-		Matrix::display_html_table ($coach_change_data);
+		$data = $vsc->get_coach_change_data_pages($coach_id, 4);
+		$f3->set("data", $data);
+		$f3->set("wt", $vsc->wt);
 		
-		// display talk stats
-		echo "<hr> {$vsc->wt->queries_count} quer" . ($vsc->wt->queries_count>1 ? "ies" : "y") . " (" . number_format ($vsc->wt->queries_duration, 3, ",", " ") . " s) <br/>" . PHP_EOL;
-		return;
+		$page = [
+			"module"	=>	"COMMON__",
+			"layout"	=>	"default",
+			"name"		=>	"matrix",
+			"title"		=>	"Coaches",
+			"breadcrumbs" => static::breadcrumbs(),
+		];
+		self::renderPage($page);
 	}
 	
 }

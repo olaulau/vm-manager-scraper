@@ -23,9 +23,6 @@ PoC
 
 
 # TODO
-- store final data into a in-memory DB (sqlite, mariadb ?) each execution
-
-
 changement coach :
 - filtrer les coaches avec des caractéristiques supérieures
 - trier par prix

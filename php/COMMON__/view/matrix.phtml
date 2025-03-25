@@ -1,0 +1,15 @@
+<?php
+use Lib\Matrix;
+?>
+
+	<!-- Begin page content -->
+	<main role="main" class="container-fluid">
+
+		<h1><?= $page["title"] ?></h1>
+		
+		<?php
+		Matrix::display_html_table ($data);
+		?>
+		
+	</main>
+	

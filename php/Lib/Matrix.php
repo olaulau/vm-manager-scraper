@@ -5,7 +5,6 @@ namespace Lib;
 class Matrix
 {
 	
-	
 	public static function display_html_table (array $data): void
 	{
 		$headers = array_shift($data);
