@@ -34,10 +34,10 @@ class DbCtrl extends PrivateCtrl
 	public static function testGET (Base $f3, array $url, string $controler)
 	{
 		//////////////////////////////////
-		// sqlite in memory												// 25 ms
+		// sqlite in memory												// 20 ms
 		$sqlite_filename = ":memory:";
 		
-		// sqlite in file												// 31 ms
+		// sqlite in file												// 25 ms
 		// $sqlite_filename = __DIR__ . "/../../../tmp/test.sqlite";
 		// if(file_exists($sqlite_filename)) {
 		// 	unlink($sqlite_filename);
@@ -51,13 +51,13 @@ class DbCtrl extends PrivateCtrl
 		$f3->set("db", $db);
 		//////////////////////////////////
 		
-		// $db = $f3->get("db"); /** @var SQL $db */
 		//////////////////////////////////
-		// mysql memory engine											// 34 ms
+		// $db = $f3->get("db"); /** @var SQL $db */
+		// mysql memory engine											// 29 ms
 		// $sql = "SET default_storage_engine=MEMORY;";
 		// $db->exec($sql);
 		
-		// mysql innodb engine											// 39 ms
+		// mysql innodb engine											// 34 ms
 		// $sql = "SET default_storage_engine=INNODB;";
 		// $db->exec($sql);
 		//////////////////////////////////

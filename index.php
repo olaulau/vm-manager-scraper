@@ -2,7 +2,10 @@
 require 'vendor/autoload.php';
 
 // xhprof start
-// xhprof_enable();
+// xhprof_enable(
+// 	XHPROF_FLAGS_NO_BUILTINS | XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY,
+// 	["ignored_functions" => ["call_user_func"]]
+// );
 
 $f3 = \Base::instance();
 

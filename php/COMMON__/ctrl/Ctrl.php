@@ -37,7 +37,7 @@ abstract class Ctrl
 					PDO::ATTR_PERSISTENT => true,
 				]
 			);
-			// $db->log(true);
+			// $db->log(false);
 			$f3->set("db", $db);
 		}
 		
